@@ -1582,3 +1582,26 @@ section h2{
     padding:12px 13px;
   }
 }
+
+/* ===== Mobile portfolio reliability fix =====
+   Keep portfolio and project-gallery content visible on touch/mobile devices
+   even if scroll-reveal observers are delayed or unavailable. */
+@media (max-width: 768px) {
+  .portfolio-intro.reveal,
+  .project-grid.stagger > *,
+  .project-page-grid.stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* Newsletter confirmation uses the same branded success treatment as the project form. */
+.newsletter-signup-area{min-width:0}
+.newsletter-signup-area .form-success-card,
+.newsletter-signup-area .form-error-card{margin:14px 0 0}
+.newsletter-signup-area .form-success-card .eyebrow{color:#8420F4}
+.newsletter-signup-area .form-success-card .eyebrow:before{background:#8420F4}
+.newsletter-signup-area .form-error-card{color:#382f40}
+.newsletter-form .btn.is-sending{pointer-events:none;opacity:.72}
+

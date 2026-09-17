@@ -377,3 +377,40 @@ document.querySelectorAll('.faq-list').forEach(list=>{
     }
   });
 })();
+
+// Submit the Designify mailing-list form through FormSubmit without leaving the website.
+(()=>{
+  const form=document.getElementById('designifyNewsletterForm');
+  if(!form) return;
+  const success=document.getElementById('newsletterSuccessCard');
+  const error=document.getElementById('newsletterErrorCard');
+  const submit=form.querySelector('button[type="submit"]');
+  const originalLabel=submit?.textContent||'Join the List';
+  success?.querySelector('.form-success-close')?.addEventListener('click',()=>{success.hidden=true});
+
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!form.reportValidity()) return;
+    if(success) success.hidden=true;
+    if(error) error.hidden=true;
+    if(submit){submit.classList.add('is-sending');submit.disabled=true;submit.textContent='Joining…';}
+
+    try{
+      const response=await fetch('https://formsubmit.co/ajax/designifybim@gmail.com',{
+        method:'POST',
+        headers:{'Accept':'application/json'},
+        body:new FormData(form)
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok || result.success===false) throw new Error(result.message||'Signup failed');
+
+      form.reset();
+      if(success){success.hidden=false;success.scrollIntoView({behavior:'smooth',block:'center'});}
+    }catch(err){
+      if(error){error.hidden=false;error.scrollIntoView({behavior:'smooth',block:'center'});}
+    }finally{
+      if(submit){submit.classList.remove('is-sending');submit.disabled=false;submit.textContent=originalLabel;}
+    }
+  });
+})();
+
