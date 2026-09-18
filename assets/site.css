@@ -1615,3 +1615,17 @@ section h2{
   display:none!important;
   content:none!important;
 }
+
+/* Centered, text-only About page introduction. */
+.about-hero-copy{
+  max-width:980px;
+  text-align:center;
+}
+.about-hero-copy .reveal{
+  max-width:900px;
+  margin:0 auto;
+}
+.about-hero-copy .lead{
+  margin-left:auto;
+  margin-right:auto;
+}
