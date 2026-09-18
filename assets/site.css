@@ -1605,3 +1605,13 @@ section h2{
 .newsletter-signup-area .form-error-card{color:#382f40}
 .newsletter-form .btn.is-sending{pointer-events:none;opacity:.72}
 
+/* Cleaner section labels: remove the decorative line and wide tracking. */
+.eyebrow{
+  gap:0!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+}
+.eyebrow:before{
+  display:none!important;
+  content:none!important;
+}
