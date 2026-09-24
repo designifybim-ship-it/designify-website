@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Designify Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/admin.css">
+</head>
+<body>
+  <div id="toast" class="toast" hidden></div>
+  <main id="authShell" class="shell">
+    <div class="auth-wrap">
+      <div class="brand-lockup"><div class="brand-mark">D</div><div><h1>Designify Admin</h1><p>Design with intention.</p></div></div>
+      <section class="panel auth-card">
+        <h2>Your private studio space.</h2>
+        <p>Sign in to manage enquiries, projects, editable site content and media without changing the public website code.</p>
+        <form id="signInForm">
+          <div class="field"><label for="signInEmail">Email</label><input id="signInEmail" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="signInPassword">Password</label><input id="signInPassword" name="password" type="password" autocomplete="current-password" required></div>
+          <button class="btn btn-primary" type="submit">Sign in</button>
+        </form>
+        <hr>
+        <h3>Create an account</h3>
+        <form id="signUpForm">
+          <div class="field"><label for="signUpName">Full name</label><input id="signUpName" name="full_name" autocomplete="name" required></div>
+          <div class="field"><label for="signUpEmail">Email</label><input id="signUpEmail" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="signUpPassword">Password</label><input id="signUpPassword" name="password" type="password" minlength="8" autocomplete="new-password" required></div>
+          <button class="btn btn-soft" type="submit">Create account</button>
+        </form>
+        <div id="authMessage" class="message" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="appShell" class="shell" hidden>
+    <header class="app-header"><div class="app-header-inner"><div class="app-brand"><div class="brand-mark">D</div><div><strong>Designify Admin</strong><small>Private studio dashboard</small></div></div><div class="account-box"><div><strong id="accountName"></strong><small id="accountRole"></small></div><button id="signOutButton" class="btn btn-soft">Sign out</button></div></div></header>
+    <div class="app-layout">
+      <aside class="side-nav admin-only"><button class="active" data-view="overview">Overview</button><button data-view="enquiries">Enquiries</button><button data-view="projects">Projects</button><button data-view="content">Site content</button><button data-view="media">Media</button></aside>
+      <main class="main-content">
+        <section id="clientPortal" class="view" data-view="client" hidden><div class="section-intro"><div><h2>Your project space.</h2><p>Updates, notes and project details shared by Designify will appear here.</p></div></div><div id="clientProjectList" class="stack"></div></section>
+        <section class="view" data-view="overview"><div class="section-intro"><div><h2>Good to see you.</h2><p>Here is the current pulse of your Designify workspace.</p></div></div><div class="stats-grid"><article class="panel stat-card purple"><span>Total enquiries</span><strong id="statEnquiries">0</strong></article><article class="panel stat-card pink"><span>New enquiries</span><strong id="statNew">0</strong></article><article class="panel stat-card blue"><span>Projects</span><strong id="statProjects">0</strong></article><article class="panel stat-card mint"><span>Editable content</span><strong id="statContent">0</strong></article></div><div class="content-grid"><article class="panel content-card"><h3>What this dashboard controls</h3><p class="empty">Review new project requests, update enquiry status, add portfolio projects, edit booking notices and upload approved media. Client accounts only see the projects assigned to them.</p></article><article class="panel content-card"><h3>Backend status</h3><p class="empty">Supabase database, authentication, row-level security and storage are connected.</p></article></div></section>
+        <section class="view" data-view="enquiries" hidden><div class="section-intro"><div><h2>Enquiries.</h2><p>Project requests submitted through the public contact form appear here.</p></div></div><article class="panel content-card table-wrap"><table><thead><tr><th>Contact</th><th>Services</th><th>Details</th><th>Status</th><th>Received</th></tr></thead><tbody id="enquiriesBody"></tbody></table></article></section>
+        <section class="view" data-view="projects" hidden><div class="section-intro"><div><h2>Projects.</h2><p>Keep portfolio entries and client project spaces organized from one place.</p></div><button id="newProjectButton" class="btn btn-primary">New project</button></div><div class="content-grid"><form id="projectForm" class="panel form-card"><h3 id="projectFormTitle">Add a project</h3><div class="two-fields"><div class="field"><label>Project title</label><input name="title" required></div><div class="field"><label>URL slug</label><input name="slug" placeholder="auto-generated if blank"></div><div class="field"><label>Client / business</label><input name="client_name"></div><div class="field"><label>Category</label><input name="category"></div><div class="field"><label>Status</label><select name="status"><option value="draft">Draft</option><option value="active">Active</option><option value="complete">Complete</option><option value="archived">Archived</option></select></div><div class="field"><label>Cover image URL</label><input name="cover_url" type="url"></div></div><div class="field"><label>Short description</label><textarea name="excerpt"></textarea></div><div class="field"><label>Project details</label><textarea name="description"></textarea></div><div class="checkbox-row"><label><input id="projectPublished" type="checkbox"> Published</label><label><input id="projectFeatured" type="checkbox"> Featured</label></div><div class="button-row"><button id="projectSaveButton" class="btn btn-primary" type="submit">Save project</button><button class="btn btn-soft" type="button" id="newProjectButtonBottom">Clear</button></div></form><div id="projectList" class="project-list"></div></div></section>
+        <section class="view" data-view="content" hidden><div class="section-intro"><div><h2>Site content.</h2><p>Update approved notices and other content records without editing the public site manually.</p></div></div><div id="contentList" class="stack"></div><form id="contentEditor" class="panel form-card" hidden><h3>Edit content</h3><div class="field"><label>Title</label><input id="contentTitle" required></div><div class="field"><label>Headline</label><input id="contentHeadline"></div><div class="field"><label>Supporting text</label><input id="contentSubtext"></div><div class="checkbox-row"><label><input id="contentActive" type="checkbox"> Active</label><label><input id="contentPublished" type="checkbox"> Published</label></div><div class="button-row"><button class="btn btn-primary" type="submit">Save content</button><button class="btn btn-soft" type="button" id="closeContentEditor">Cancel</button></div></form></section>
+        <section class="view" data-view="media" hidden><div class="section-intro"><div><h2>Media library.</h2><p>Upload approved public website visuals or private client files securely.</p></div></div><form id="mediaForm" class="panel form-card"><div class="two-fields"><div class="field"><label>File</label><input id="mediaFile" type="file" accept="image/*,.pdf,.zip" required></div><div class="field"><label>Alt text / description</label><input id="mediaAlt"></div></div><div class="checkbox-row"><label><input id="mediaPublic" type="checkbox"> Public website asset</label></div><button class="btn btn-primary" type="submit">Upload media</button></form><div id="mediaGrid" class="media-grid" style="margin-top:18px"></div></section>
+      </main>
+    </div>
+  </div>
+  <script type="module" src="../assets/admin.js"></script>
+</body>
+</html>
