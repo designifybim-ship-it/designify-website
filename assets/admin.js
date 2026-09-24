@@ -197,7 +197,7 @@ function pageUrl(page) {
 }
 
 async function loadPageCatalog() {
-  const { data, error } = await supabase.from('site_content').select('id,content_key,title,content,published').eq('section', 'page').order('content_key');
+  const { data, error } = await supabase.from('site_content').select('id,content_key,title,content,draft_content,published').eq('section', 'page').order('content_key');
   if (error) throw error;
   const select = $('#pageSelect');
   if (!select) return;
@@ -215,7 +215,8 @@ async function openPageEditor() {
   const item = select?._pageRows?.find(row => row.id === select.value) || select?._pageRows?.[0];
   if (!item) return;
   const page = item.content_key.replace(/^page:/, '');
-  state.pageEditor = { id: item.id, page, overrides: item.content?.overrides || {}, seo: item.content?.seo || {}, selectedPath: null };
+  const workingContent = item.draft_content || item.content || {};
+  state.pageEditor = { id: item.id, page, overrides: workingContent.overrides || {}, seo: workingContent.seo || {}, selectedPath: null };
   $('#pageFrame').src = `${pageUrl(page)}?cms_edit=1&v=${Date.now()}`;
   $('#pageEditorStatus').textContent = `Editing ${page}`;
   $('#elementInspector').hidden = true;
@@ -252,7 +253,8 @@ async function persistPage(published) {
   if (!state.pageEditor) return;
   const seo = { title: $('#pageSeoTitle').value.trim(), description: $('#pageSeoDescription').value.trim(), canonical: $('#pageCanonical').value.trim(), og_image: $('#pageOgImage').value.trim() };
   const content = { page: state.pageEditor.page, overrides: state.pageEditor.overrides || {}, seo };
-  const { error } = await supabase.from('site_content').update({ content, published, updated_by: state.user.id }).eq('id', state.pageEditor.id);
+  const payload = published ? { content, draft_content: null, published: true, updated_by: state.user.id } : { draft_content: content, updated_by: state.user.id };
+  const { error } = await supabase.from('site_content').update(payload).eq('id', state.pageEditor.id);
   if (error) { showToast(error.message, 'error'); return; }
   state.pageEditor.seo = seo;
   showToast(published ? 'Page published.' : 'Draft saved.', 'success');
