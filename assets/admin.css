@@ -116,5 +116,36 @@ td select { border: 1px solid var(--line); border-radius: 8px; padding: 6px; bac
 .portal-project { padding: 16px; margin-top: 12px; }
 .portal-project h3 { margin: 0; font-size: 15px; }
 .portal-project p { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.editor-count { display: block; margin-top: 8px; color: var(--purple); font-size: 11px; font-weight: 700; }
+.page-editor-toolbar { display: flex; align-items: center; gap: 14px; padding: 13px 16px; margin-bottom: 16px; }
+.page-editor-toolbar label { color: var(--muted); font-size: 12px; font-weight: 700; }
+.page-editor-toolbar select { min-width: 240px; border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; color: var(--ink); background: #fff; }
+.page-editor-toolbar span { color: var(--muted); font-size: 12px; }
+.page-editor-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, .5fr); gap: 16px; align-items: start; }
+.page-preview { min-height: 700px; overflow: hidden; }
+.page-preview iframe { display: block; width: 100%; height: 760px; border: 0; background: #fff; }
+.page-editor-sidebar { display: grid; gap: 16px; position: sticky; top: 104px; }
+.field-help { margin: -8px 0 16px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.designify-cms-editing [contenteditable="true"] { outline: 2px dashed rgba(107,53,214,.35); outline-offset: 3px; cursor: text; }
+.chat-layout { display: grid; grid-template-columns: minmax(230px, .38fr) minmax(0, 1fr); gap: 16px; min-height: 610px; }
+.chat-conversations { padding: 10px; align-self: stretch; }
+.chat-conversation { display: block; width: 100%; border: 0; border-radius: 14px; padding: 13px; text-align: left; color: var(--ink); background: transparent; }
+.chat-conversation:hover, .chat-conversation.active { background: #f0e9ff; }
+.chat-conversation strong, .chat-conversation small, .chat-conversation span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-conversation strong { font-size: 12px; }
+.chat-conversation small, .chat-conversation span { margin-top: 4px; color: var(--muted); font-size: 10px; }
+.chat-thread-panel { display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; min-height: 610px; }
+.chat-thread-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 18px; border-bottom: 1px solid var(--line); }
+.chat-thread-head h3 { margin: 0; font-size: 15px; }
+.chat-thread-head small { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+.chat-thread { min-height: 420px; max-height: 510px; overflow: auto; padding: 18px; background: #fcfbff; }
+.chat-bubble { width: fit-content; max-width: min(75%, 480px); margin: 0 0 12px; padding: 11px 13px; border-radius: 15px 15px 15px 4px; background: #f0e9ff; }
+.chat-bubble.outgoing { margin-left: auto; border-radius: 15px 15px 4px 15px; color: #fff; background: linear-gradient(135deg, var(--purple), var(--violet)); }
+.chat-bubble p { margin: 0; font-size: 12px; line-height: 1.55; white-space: pre-wrap; }
+.chat-bubble small { display: block; margin-top: 5px; opacity: .7; font-size: 9px; }
+.chat-composer { display: flex; gap: 9px; padding: 14px; border-top: 1px solid var(--line); }
+.chat-composer input { min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 11px; padding: 11px 12px; outline: none; }
+@media (max-width: 1040px) { .page-editor-layout { grid-template-columns: 1fr; } .page-editor-sidebar { position: static; grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .page-editor-toolbar { align-items: stretch; flex-direction: column; } .page-editor-toolbar select { min-width: 0; } .page-preview iframe { height: 650px; } .page-editor-sidebar { grid-template-columns: 1fr; } .chat-layout { grid-template-columns: 1fr; } .chat-conversations { min-height: 150px; } .chat-thread-panel { min-height: 520px; } }
 @media (max-width: 980px) { .app-layout { grid-template-columns: 1fr; } .side-nav { position: static; display: flex; overflow-x: auto; } .side-nav button { white-space: nowrap; } .content-grid { grid-template-columns: 1fr; } }
 @media (max-width: 700px) { .app-header-inner { width: min(100% - 24px, 1380px); } .account-box div { display: none; } .app-layout { width: min(100% - 24px, 1380px); padding-top: 18px; } .stats-grid { grid-template-columns: 1fr 1fr; } .two-fields { grid-template-columns: 1fr; gap: 0; } .media-grid { grid-template-columns: 1fr 1fr; } .section-intro { align-items: flex-start; flex-direction: column; } .auth-card { padding: 23px; } }

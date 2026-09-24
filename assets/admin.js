@@ -4,7 +4,7 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
 const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
-const state = { user: null, profile: null, editingProjectId: null, editingContentId: null };
+const state = { user: null, profile: null, editingProjectId: null, editingContentId: null, pageEditor: null, pageSaveMode: null, selectedChatId: null, selectedChatChannel: null, chatInboxChannel: null };
 const ADMIN_REDIRECT_URL = 'https://designifybim-ship-it.github.io/designify-website/admin/';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[character]));
@@ -44,7 +44,8 @@ async function showSession(session) {
     $('#clientPortal').hidden = isAdmin;
     if (isAdmin) {
       switchView('overview');
-      await Promise.all([loadOverview(), loadEnquiries(), loadProjects(), loadContent(), loadMedia()]);
+      await Promise.all([loadOverview(), loadEnquiries(), loadProjects(), loadContent(), loadMedia(), loadPageCatalog(), loadChatConversations()]);
+      subscribeToChatInbox();
     } else {
       await loadClientPortal();
     }
@@ -191,6 +192,135 @@ async function loadClientPortal() {
   $('#clientProjectList').innerHTML = data.map(item => { const project = item.projects; return `<article class="panel portal-project"><span class="tag">${escapeHtml(project.status)}</span><h3>${escapeHtml(project.title)}</h3><p>${escapeHtml(project.description || 'Project details will appear here as they are added.')}</p><strong>Project updates</strong>${(project.project_updates || []).sort((a, b) => a.sort_order - b.sort_order).map(update => `<p>• ${escapeHtml(update.title)}: ${escapeHtml(update.status)}${update.note ? ` · ${escapeHtml(update.note)}` : ''}</p>`).join('') || '<p>No updates added yet.</p>'}</article>`; }).join('');
 }
 
+function pageUrl(page) {
+  return `../${page === 'index' ? 'index.html' : `${page}.html`}`;
+}
+
+async function loadPageCatalog() {
+  const { data, error } = await supabase.from('site_content').select('id,content_key,title,content,published').eq('section', 'page').order('content_key');
+  if (error) throw error;
+  const select = $('#pageSelect');
+  if (!select) return;
+  select.innerHTML = (data || []).map(item => {
+    const page = item.content_key.replace(/^page:/, '');
+    return `<option value="${escapeHtml(item.id)}">${escapeHtml(item.title || page)} · ${escapeHtml(page)}</option>`;
+  }).join('');
+  $('#pageEditorCount').textContent = `${data?.length || 0} editable pages`;
+  select._pageRows = data || [];
+  if (data?.length) await openPageEditor();
+}
+
+async function openPageEditor() {
+  const select = $('#pageSelect');
+  const item = select?._pageRows?.find(row => row.id === select.value) || select?._pageRows?.[0];
+  if (!item) return;
+  const page = item.content_key.replace(/^page:/, '');
+  state.pageEditor = { id: item.id, page, overrides: item.content?.overrides || {}, seo: item.content?.seo || {}, selectedPath: null };
+  $('#pageFrame').src = `${pageUrl(page)}?cms_edit=1&v=${Date.now()}`;
+  $('#pageEditorStatus').textContent = `Editing ${page}`;
+  $('#elementInspector').hidden = true;
+  $('#pageSeoTitle').value = state.pageEditor.seo.title || '';
+  $('#pageSeoDescription').value = state.pageEditor.seo.description || '';
+  $('#pageCanonical').value = state.pageEditor.seo.canonical || '';
+  $('#pageOgImage').value = state.pageEditor.seo.og_image || '';
+}
+
+function updateInspector(message) {
+  const inspector = $('#elementInspector');
+  if (!inspector) return;
+  inspector.hidden = false;
+  $('#selectedElementPath').textContent = message.path || 'Selected element';
+  $('#selectedElementKind').textContent = message.kind === 'image' ? 'Image' : 'Text';
+  $('#elementSrcField').hidden = message.kind !== 'image';
+  $('#elementAltField').hidden = message.kind !== 'image';
+  $('#elementHrefField').hidden = message.kind === 'image';
+  $('#elementSrc').value = message.value?.src || '';
+  $('#elementAlt').value = message.value?.alt || '';
+  $('#elementHref').value = message.value?.href || '';
+  state.pageEditor.selectedPath = message.path;
+  state.pageEditor.selectedKind = message.kind;
+}
+
+function requestPageSave(mode) {
+  if (!state.pageEditor) return;
+  state.pageSaveMode = mode;
+  const frame = $('#pageFrame');
+  frame?.contentWindow?.postMessage({ type: 'designify-cms-request-state' }, '*');
+}
+
+async function persistPage(published) {
+  if (!state.pageEditor) return;
+  const seo = { title: $('#pageSeoTitle').value.trim(), description: $('#pageSeoDescription').value.trim(), canonical: $('#pageCanonical').value.trim(), og_image: $('#pageOgImage').value.trim() };
+  const content = { page: state.pageEditor.page, overrides: state.pageEditor.overrides || {}, seo };
+  const { error } = await supabase.from('site_content').update({ content, published, updated_by: state.user.id }).eq('id', state.pageEditor.id);
+  if (error) { showToast(error.message, 'error'); return; }
+  state.pageEditor.seo = seo;
+  showToast(published ? 'Page published.' : 'Draft saved.', 'success');
+  $('#pageEditorStatus').textContent = `${published ? 'Published' : 'Draft saved'} · ${state.pageEditor.page}`;
+  await loadContent();
+}
+
+function renderChatConversations(data) {
+  const list = $('#chatConversationList');
+  if (!list) return;
+  if (!data?.length) { list.innerHTML = '<div class="empty">No customer chats yet.</div>'; return; }
+  list.innerHTML = data.map(item => `<button class="chat-conversation ${item.id === state.selectedChatId ? 'active' : ''}" data-chat-id="${item.id}"><strong>${escapeHtml(item.visitor_name || 'Website visitor')}</strong><small>${escapeHtml(item.visitor_email || 'No email provided')} · ${escapeHtml(item.status)}</small><span>${escapeHtml(item.last_message || 'New conversation')} · ${formatDate(item.updated_at || item.created_at)}</span></button>`).join('');
+  list.querySelectorAll('[data-chat-id]').forEach(button => button.addEventListener('click', () => openChatConversation(button.dataset.chatId)));
+}
+
+async function loadChatConversations() {
+  const { data, error } = await supabase.from('chat_conversations').select('*').order('updated_at', { ascending: false }).order('created_at', { ascending: false });
+  if (error) { showToast(error.message, 'error'); return; }
+  renderChatConversations(data || []);
+}
+
+async function openChatConversation(id) {
+  state.selectedChatId = id;
+  if (state.selectedChatChannel) await supabase.removeChannel(state.selectedChatChannel);
+  const { data: conversation, error: conversationError } = await supabase.from('chat_conversations').select('*').eq('id', id).single();
+  const { data: messages, error: messagesError } = await supabase.from('chat_messages').select('*').eq('conversation_id', id).order('created_at');
+  if (conversationError || messagesError) { showToast((conversationError || messagesError).message, 'error'); return; }
+  $('#chatThreadTitle').textContent = conversation.visitor_name || 'Website visitor';
+  $('#chatThreadMeta').textContent = `${conversation.visitor_email || 'No email provided'} · ${conversation.status}`;
+  $('#chatComposer').hidden = false;
+  $('#closeChatButton').hidden = conversation.status === 'closed';
+  $('#chatThread').innerHTML = (messages || []).map(message => `<div class="chat-bubble ${message.sender_type === 'admin' ? 'outgoing' : ''}"><p>${escapeHtml(message.body)}</p><small>${message.sender_type === 'admin' ? 'You' : 'Customer'} · ${formatDate(message.created_at)}</small></div>`).join('') || '<div class="empty">No messages yet.</div>';
+  $('#chatThread').scrollTop = $('#chatThread').scrollHeight;
+  state.selectedChatChannel = supabase.channel(`admin-chat-${id}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${id}` }, payload => {
+    const message = payload.new;
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${message.sender_type === 'admin' ? 'outgoing' : ''}`;
+    bubble.innerHTML = `<p>${escapeHtml(message.body)}</p><small>${message.sender_type === 'admin' ? 'You' : 'Customer'} · ${formatDate(message.created_at)}</small>`;
+    $('#chatThread').appendChild(bubble);
+    $('#chatThread').scrollTop = $('#chatThread').scrollHeight;
+  }).subscribe();
+  await loadChatConversations();
+}
+
+async function sendAdminChat(event) {
+  event.preventDefault();
+  if (!state.selectedChatId) return;
+  const input = $('#chatMessageInput');
+  const body = input.value.trim();
+  if (!body) return;
+  const { error } = await supabase.from('chat_messages').insert({ conversation_id: state.selectedChatId, sender_type: 'admin', sender_id: state.user.id, body });
+  if (error) { showToast(error.message, 'error'); return; }
+  input.value = '';
+}
+
+async function closeSelectedChat() {
+  if (!state.selectedChatId) return;
+  const { error } = await supabase.from('chat_conversations').update({ status: 'closed' }).eq('id', state.selectedChatId);
+  if (error) { showToast(error.message, 'error'); return; }
+  showToast('Conversation closed.', 'success');
+  await openChatConversation(state.selectedChatId);
+}
+
+function subscribeToChatInbox() {
+  if (state.chatInboxChannel) return;
+  state.chatInboxChannel = supabase.channel('admin-chat-inbox').on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, loadChatConversations).subscribe();
+}
+
 $('#signInForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
@@ -228,6 +358,40 @@ $('#newProjectButtonBottom')?.addEventListener('click', resetProjectForm);
 $('#contentForm')?.addEventListener('submit', saveContent);
 $('#closeContentEditor')?.addEventListener('click', () => { $('#contentEditor').hidden = true; });
 $('#mediaForm')?.addEventListener('submit', uploadMedia);
+$('#pageSelect')?.addEventListener('change', openPageEditor);
+$('#savePageDraft')?.addEventListener('click', () => requestPageSave(false));
+$('#publishPage')?.addEventListener('click', () => requestPageSave(true));
+$('#applyElementChanges')?.addEventListener('click', () => {
+  if (!state.pageEditor?.selectedPath) return;
+  const attribute = state.pageEditor.selectedKind === 'image' ? 'src' : 'href';
+  const value = attribute === 'src' ? $('#elementSrc').value.trim() : $('#elementHref').value.trim();
+  $('#pageFrame').contentWindow?.postMessage({ type: 'designify-cms-set-attribute', path: state.pageEditor.selectedPath, attribute, value }, '*');
+  if (state.pageEditor.selectedKind === 'image') $('#pageFrame').contentWindow?.postMessage({ type: 'designify-cms-set-attribute', path: state.pageEditor.selectedPath, attribute: 'alt', value: $('#elementAlt').value.trim() }, '*');
+});
+$('#chatComposer')?.addEventListener('submit', sendAdminChat);
+$('#closeChatButton')?.addEventListener('click', closeSelectedChat);
+
+window.addEventListener('message', event => {
+  const message = event.data;
+  if (!message?.type || !state.pageEditor) return;
+  if (message.type === 'designify-cms-ready') {
+    state.pageEditor.overrides = message.overrides || state.pageEditor.overrides;
+    state.pageEditor.seo = message.seo || state.pageEditor.seo;
+    $('#pageSeoTitle').value = state.pageEditor.seo.title || '';
+    $('#pageSeoDescription').value = state.pageEditor.seo.description || '';
+    $('#pageCanonical').value = state.pageEditor.seo.canonical || '';
+    $('#pageOgImage').value = state.pageEditor.seo.og_image || '';
+  }
+  if (message.type === 'designify-cms-select') updateInspector(message);
+  if (message.type === 'designify-cms-state') {
+    state.pageEditor.overrides = message.overrides || {};
+    if (state.pageSaveMode !== null) {
+      const mode = state.pageSaveMode;
+      state.pageSaveMode = null;
+      persistPage(mode);
+    }
+  }
+});
 
 supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => showSession(session), 0); });
 const authError = new URLSearchParams(window.location.hash.slice(1));
