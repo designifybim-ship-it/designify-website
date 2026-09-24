@@ -126,6 +126,12 @@ td select { border: 1px solid var(--line); border-radius: 8px; padding: 6px; bac
 .page-preview iframe { display: block; width: 100%; height: 760px; border: 0; background: #fff; }
 .page-editor-sidebar { display: grid; gap: 16px; position: sticky; top: 104px; }
 .field-help { margin: -8px 0 16px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.page-content-fields { display: grid; gap: 12px; max-height: 610px; overflow: auto; padding-right: 3px; }
+.page-content-field { display: grid; gap: 6px; padding-bottom: 11px; border-bottom: 1px solid var(--line); }
+.page-content-field label { color: var(--muted); font-size: 10px; font-weight: 700; line-height: 1.35; }
+.page-content-field textarea, .page-content-field input { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; color: var(--ink); background: #fff; outline: none; font-size: 11px; }
+.page-content-field textarea { min-height: 58px; resize: vertical; line-height: 1.45; }
+.page-content-field textarea:focus, .page-content-field input:focus { border-color: var(--violet); box-shadow: 0 0 0 4px rgba(161,94,232,.12); }
 .designify-cms-editing [contenteditable="true"] { outline: 2px dashed rgba(107,53,214,.35); outline-offset: 3px; cursor: text; }
 .chat-layout { display: grid; grid-template-columns: minmax(230px, .38fr) minmax(0, 1fr); gap: 16px; min-height: 610px; }
 .chat-conversations { padding: 10px; align-self: stretch; }

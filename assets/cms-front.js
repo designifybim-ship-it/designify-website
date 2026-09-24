@@ -10,7 +10,8 @@ const pageKey = (() => {
 
 const editableSelector = 'h1,h2,h3,h4,h5,p,span,strong,small,li,a,button,label';
 const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'INPUT', 'TEXTAREA', 'SELECT']);
-const state = { overrides: {}, seo: {}, originals: {}, editor: new URLSearchParams(window.location.search).has('cms_edit') };
+const query = new URLSearchParams(window.location.search);
+const state = { overrides: {}, seo: {}, originals: {}, editor: query.has('cms_edit') || query.has('cms_import') };
 
 function domPath(element) {
   const parts = [];
@@ -90,8 +91,21 @@ function applySeo() {
   }
 }
 
+function contentElements() {
+  const elements = [];
+  document.querySelectorAll('h1,h2,h3,h4,h5,p,a,button,li').forEach(element => {
+    if (ignoredTags.has(element.tagName) || !element.textContent.trim() || !element.dataset.cmsPath) return;
+    elements.push({ path: element.dataset.cmsPath, kind: 'text', tag: element.tagName.toLowerCase(), value: element.textContent.trim(), html: element.innerHTML });
+  });
+  document.querySelectorAll('img').forEach(element => {
+    if (!element.dataset.cmsPath) return;
+    elements.push({ path: element.dataset.cmsPath, kind: 'image', value: { src: element.getAttribute('src') || '', alt: element.getAttribute('alt') || '' } });
+  });
+  return elements;
+}
+
 function currentState() {
-  return { pageKey, overrides: state.overrides, seo: state.seo };
+  return { pageKey, overrides: state.overrides, seo: state.seo, elements: contentElements() };
 }
 
 function enableEditor() {
@@ -130,6 +144,14 @@ window.addEventListener('message', event => {
     if (!element) return;
     element.setAttribute(event.data.attribute, event.data.value || '');
     state.overrides[event.data.path] = { kind: 'attributes', value: { ...(state.overrides[event.data.path]?.value || {}), [event.data.attribute]: event.data.value || '' } };
+    window.parent.postMessage({ type: 'designify-cms-state', ...currentState() }, '*');
+  }
+  if (event.data.type === 'designify-cms-set-html') {
+    const element = document.querySelector(`[data-cms-path="${CSS.escape(event.data.path)}"]`);
+    if (!element) return;
+    const value = cleanHtml(event.data.value || '');
+    element.innerHTML = value;
+    state.overrides[event.data.path] = { kind: 'html', value };
     window.parent.postMessage({ type: 'designify-cms-state', ...currentState() }, '*');
   }
 });

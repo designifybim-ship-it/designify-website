@@ -196,6 +196,33 @@ function pageUrl(page) {
   return `../${page === 'index' ? 'index.html' : `${page}.html`}`;
 }
 
+async function importPageBaselines(rows) {
+  const pending = (rows || []).filter(row => !(row.content?.baseline || row.draft_content?.baseline));
+  if (!pending.length) return;
+  $('#pageEditorStatus').textContent = `Importing ${pending.length} pages from the live website…`;
+  const importer = document.createElement('iframe');
+  importer.hidden = true;
+  document.body.appendChild(importer);
+  for (const row of pending) {
+    const page = row.content_key.replace(/^page:/, '');
+    await new Promise(resolve => {
+      const onReady = async event => {
+        if (event.data?.type !== 'designify-cms-ready' || event.data.pageKey !== page) return;
+        window.removeEventListener('message', onReady);
+        const baseline = event.data.elements || [];
+        const content = { ...(row.content || {}), baseline };
+        await supabase.from('site_content').update({ content }).eq('id', row.id);
+        row.content = content;
+        resolve();
+      };
+      window.addEventListener('message', onReady);
+      importer.src = `${pageUrl(page)}?cms_import=1&v=${Date.now()}`;
+    });
+  }
+  importer.remove();
+  $('#pageEditorStatus').textContent = 'Current front-end content imported.';
+}
+
 async function loadPageCatalog() {
   const { data, error } = await supabase.from('site_content').select('id,content_key,title,content,draft_content,published').eq('section', 'page').order('content_key');
   if (error) throw error;
@@ -207,6 +234,7 @@ async function loadPageCatalog() {
   }).join('');
   $('#pageEditorCount').textContent = `${data?.length || 0} editable pages`;
   select._pageRows = data || [];
+  await importPageBaselines(data || []);
   if (data?.length) await openPageEditor();
 }
 
@@ -216,7 +244,7 @@ async function openPageEditor() {
   if (!item) return;
   const page = item.content_key.replace(/^page:/, '');
   const workingContent = item.draft_content || item.content || {};
-  state.pageEditor = { id: item.id, page, overrides: workingContent.overrides || {}, seo: workingContent.seo || {}, selectedPath: null };
+  state.pageEditor = { id: item.id, page, baseline: workingContent.baseline || [], elements: workingContent.baseline || [], overrides: workingContent.overrides || {}, seo: workingContent.seo || {}, selectedPath: null };
   $('#pageFrame').src = `${pageUrl(page)}?cms_edit=1&v=${Date.now()}`;
   $('#pageEditorStatus').textContent = `Editing ${page}`;
   $('#elementInspector').hidden = true;
@@ -224,6 +252,28 @@ async function openPageEditor() {
   $('#pageSeoDescription').value = state.pageEditor.seo.description || '';
   $('#pageCanonical').value = state.pageEditor.seo.canonical || '';
   $('#pageOgImage').value = state.pageEditor.seo.og_image || '';
+  renderPageContentFields(state.pageEditor.elements);
+}
+
+function renderPageContentFields(elements) {
+  const list = $('#pageContentFieldsList');
+  if (!list) return;
+  if (!elements?.length) { list.innerHTML = '<div class="empty">Loading the current page content…</div>'; return; }
+  list.innerHTML = elements.map((element, index) => {
+    const label = element.kind === 'image' ? `Image ${index + 1}${element.value.alt ? ` · ${element.value.alt}` : ''}` : `${element.tag.toUpperCase()} · ${element.value.slice(0, 72)}`;
+    if (element.kind === 'image') return `<div class="page-content-field"><label>${escapeHtml(label)}</label><input data-page-image-src="${escapeHtml(element.path)}" value="${escapeHtml(element.value.src)}" placeholder="Image URL"><input data-page-image-alt="${escapeHtml(element.path)}" value="${escapeHtml(element.value.alt)}" placeholder="Alt text"></div>`;
+    return `<div class="page-content-field"><label>${escapeHtml(label)}</label><textarea data-page-text="${escapeHtml(element.path)}">${escapeHtml(element.value)}</textarea></div>`;
+  }).join('');
+  $$('[data-page-text]').forEach(field => field.addEventListener('input', event => {
+    const path = event.target.dataset.pageText;
+    state.pageEditor.overrides[path] = { kind: 'html', value: event.target.value };
+    $('#pageFrame').contentWindow?.postMessage({ type: 'designify-cms-set-html', path, value: event.target.value }, '*');
+  }));
+  $$('[data-page-image-src], [data-page-image-alt]').forEach(field => field.addEventListener('input', event => {
+    const path = event.target.dataset.pageImageSrc || event.target.dataset.pageImageAlt;
+    const attribute = event.target.dataset.pageImageSrc ? 'src' : 'alt';
+    $('#pageFrame').contentWindow?.postMessage({ type: 'designify-cms-set-attribute', path, attribute, value: event.target.value }, '*');
+  }));
 }
 
 function updateInspector(message) {
@@ -252,7 +302,7 @@ function requestPageSave(mode) {
 async function persistPage(published) {
   if (!state.pageEditor) return;
   const seo = { title: $('#pageSeoTitle').value.trim(), description: $('#pageSeoDescription').value.trim(), canonical: $('#pageCanonical').value.trim(), og_image: $('#pageOgImage').value.trim() };
-  const content = { page: state.pageEditor.page, overrides: state.pageEditor.overrides || {}, seo };
+  const content = { page: state.pageEditor.page, baseline: state.pageEditor.baseline || state.pageEditor.elements || [], overrides: state.pageEditor.overrides || {}, seo };
   const payload = published ? { content, draft_content: null, published: true, updated_by: state.user.id } : { draft_content: content, updated_by: state.user.id };
   const { error } = await supabase.from('site_content').update(payload).eq('id', state.pageEditor.id);
   if (error) { showToast(error.message, 'error'); return; }
@@ -379,6 +429,12 @@ window.addEventListener('message', event => {
   if (message.type === 'designify-cms-ready') {
     state.pageEditor.overrides = message.overrides || state.pageEditor.overrides;
     state.pageEditor.seo = message.seo || state.pageEditor.seo;
+    state.pageEditor.elements = message.elements || state.pageEditor.elements;
+    if (!state.pageEditor.baseline?.length && state.pageEditor.elements?.length) {
+      state.pageEditor.baseline = state.pageEditor.elements;
+      supabase.from('site_content').update({ content: { page: state.pageEditor.page, baseline: state.pageEditor.baseline, overrides: state.pageEditor.overrides || {}, seo: state.pageEditor.seo || {} } }).eq('id', state.pageEditor.id);
+    }
+    renderPageContentFields(state.pageEditor.elements);
     $('#pageSeoTitle').value = state.pageEditor.seo.title || '';
     $('#pageSeoDescription').value = state.pageEditor.seo.description || '';
     $('#pageCanonical').value = state.pageEditor.seo.canonical || '';
