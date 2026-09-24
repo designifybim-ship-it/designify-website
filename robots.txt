@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://designifybim-ship-it.github.io/designify-website/sitemap.xml
