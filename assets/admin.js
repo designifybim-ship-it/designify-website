@@ -5,6 +5,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
 const state = { user: null, profile: null, editingProjectId: null, editingContentId: null };
+const ADMIN_REDIRECT_URL = 'https://designifybim-ship-it.github.io/designify-website/admin/';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[character]));
 const showMessage = (text, type = '') => { const box = $('#authMessage'); if (box) { box.textContent = text; box.className = `message ${type}`; } };
@@ -204,10 +205,19 @@ $('#signUpForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
   showMessage('Creating your account…');
-  const { data, error } = await supabase.auth.signUp({ email: formData.get('email'), password: formData.get('password'), options: { data: { full_name: formData.get('full_name') } } });
+  const { data, error } = await supabase.auth.signUp({ email: formData.get('email'), password: formData.get('password'), options: { emailRedirectTo: ADMIN_REDIRECT_URL, data: { full_name: formData.get('full_name') } } });
   if (error) { showMessage(error.message, 'error'); return; }
   if (!data.session) { showMessage('Account created. Check your email to confirm it, then sign in.', 'success'); return; }
   await showSession(data.session);
+});
+
+$('#resendForm')?.addEventListener('submit', async event => {
+  event.preventDefault();
+  const email = new FormData(event.currentTarget).get('email');
+  showMessage('Resending the confirmation email…');
+  const { error } = await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: ADMIN_REDIRECT_URL } });
+  if (error) { showMessage(error.message, 'error'); return; }
+  showMessage('A new confirmation email was requested. Check spam or junk as well.', 'success');
 });
 
 $('#signOutButton')?.addEventListener('click', () => supabase.auth.signOut());
@@ -220,4 +230,6 @@ $('#closeContentEditor')?.addEventListener('click', () => { $('#contentEditor').
 $('#mediaForm')?.addEventListener('submit', uploadMedia);
 
 supabase.auth.onAuthStateChange((_event, session) => { setTimeout(() => showSession(session), 0); });
+const authError = new URLSearchParams(window.location.hash.slice(1));
+if (authError.get('error_code') === 'otp_expired') showMessage('That confirmation link expired. Request a new one below.');
 showSession(null);

@@ -45,6 +45,11 @@ button { cursor: pointer; }
 .message { min-height: 22px; margin-top: 15px; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .message.error { color: #b83b61; }
 .message.success { color: #398266; }
+.resend-box { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.resend-box strong { font-size: 13px; }
+.resend-box p { margin: 5px 0 11px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.resend-line { display: flex; gap: 8px; }
+.resend-line input { min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 11px; padding: 10px 11px; }
 .toast { position: fixed; right: 22px; bottom: 22px; z-index: 30; max-width: min(360px, calc(100% - 44px)); padding: 13px 16px; border: 1px solid var(--line); border-radius: 13px; color: var(--ink); background: #fff; box-shadow: var(--shadow); font-size: 12px; }
 .toast.success { color: #24735a; border-color: #bdebd8; }
 .toast.error { color: #a7355c; border-color: #f2c5d6; }
