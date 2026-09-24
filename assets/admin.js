@@ -260,9 +260,12 @@ function renderPageContentFields(elements) {
   if (!list) return;
   if (!elements?.length) { list.innerHTML = '<div class="empty">Loading the current page content…</div>'; return; }
   list.innerHTML = elements.map((element, index) => {
-    const label = element.kind === 'image' ? `Image ${index + 1}${element.value.alt ? ` · ${element.value.alt}` : ''}` : `${element.tag.toUpperCase()} · ${element.value.slice(0, 72)}`;
-    if (element.kind === 'image') return `<div class="page-content-field"><label>${escapeHtml(label)}</label><input data-page-image-src="${escapeHtml(element.path)}" value="${escapeHtml(element.value.src)}" placeholder="Image URL"><input data-page-image-alt="${escapeHtml(element.path)}" value="${escapeHtml(element.value.alt)}" placeholder="Alt text"></div>`;
-    return `<div class="page-content-field"><label>${escapeHtml(label)}</label><textarea data-page-text="${escapeHtml(element.path)}">${escapeHtml(element.value)}</textarea></div>`;
+    const override = state.pageEditor?.overrides?.[element.path];
+    const currentText = override?.kind === 'html' ? override.value.replace(/<[^>]*>/g, '') : element.value;
+    const currentImage = override?.kind === 'attributes' ? { ...element.value, ...override.value } : element.value;
+    const label = element.kind === 'image' ? `Image ${index + 1}${currentImage.alt ? ` · ${currentImage.alt}` : ''}` : `${element.tag.toUpperCase()} · ${currentText.slice(0, 72)}`;
+    if (element.kind === 'image') return `<div class="page-content-field"><label>${escapeHtml(label)}</label><input data-page-image-src="${escapeHtml(element.path)}" value="${escapeHtml(currentImage.src)}" placeholder="Image URL"><input data-page-image-alt="${escapeHtml(element.path)}" value="${escapeHtml(currentImage.alt)}" placeholder="Alt text"></div>`;
+    return `<div class="page-content-field"><label>${escapeHtml(label)}</label><textarea data-page-text="${escapeHtml(element.path)}">${escapeHtml(currentText)}</textarea></div>`;
   }).join('');
   $$('[data-page-text]').forEach(field => field.addEventListener('input', event => {
     const path = event.target.dataset.pageText;
