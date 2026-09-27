@@ -414,3 +414,11 @@ document.querySelectorAll('.faq-list').forEach(list=>{
   });
 })();
 
+
+// Discourage casual copying of site images through the context menu or drag gesture.
+document.addEventListener('contextmenu', event => {
+  if (event.target instanceof Element && event.target.closest('img')) event.preventDefault();
+});
+document.addEventListener('dragstart', event => {
+  if (event.target instanceof Element && event.target.closest('img')) event.preventDefault();
+});
