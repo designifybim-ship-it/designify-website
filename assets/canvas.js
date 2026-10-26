@@ -51,6 +51,15 @@ $$('[data-chars]').forEach(h=>{
         frag.appendChild(w);
       });
       n.replaceWith(frag);
+    }else if(n.nodeType===1&&n.matches('.g')&&!n.matches('.rotating-word')){
+      // Gradient words move as whole words: Safari can't paint gradient text on separately animated letters
+      n.classList.add('g-split');
+      const txt=n.textContent;n.textContent='';
+      txt.split(/(\s+)/).forEach(part=>{
+        if(!part)return;
+        if(/^\s+$/.test(part)){n.appendChild(document.createTextNode(' '));return}
+        const w=document.createElement('span');w.className='word gw';w.textContent=part;w.style.transitionDelay=(0.15+i*0.025)+'s';i+=part.length;n.appendChild(w);
+      });
     }else if(n.nodeType===1&&!n.matches('.rotating-word,.box,.size')){walk(n)}
   })};
   walk(h);h.classList.add('chars');
