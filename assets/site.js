@@ -8,6 +8,23 @@ const DESIGNIFY_LINKS={
   primaryAd:'', // homepage large ad destination
   secondaryAd:'' // homepage small ad destination
 };
+// EDIT THIS ONCE to change the booking months shown across the whole site.
+const DESIGNIFY_BOOKING_MONTHS='November & December';
+
+// SLIDE-IN SPECIAL: shown once per visitor after they scroll or browse for a bit,
+// and switches itself off after the end date. Set enabled:false to turn it off early.
+const DESIGNIFY_PROMO={
+  enabled:true,
+  endDate:'2026-12-31',
+  code:'holiday15',
+  tag:'Holiday special',
+  title:'15% off holiday projects',
+  text:'Book a one-off design project in November or December and get 15% off. Mention the offer in your project request.',
+  terms:'Ends December 31, 2026. One-off projects only; not valid on monthly packages or combined with other offers.',
+  button:'Claim 15% Off'
+};
+document.querySelectorAll('[data-booking-months]').forEach(el=>{el.textContent=DESIGNIFY_BOOKING_MONTHS});
+
 document.querySelectorAll('[data-social]').forEach(a=>{const u=DESIGNIFY_LINKS[a.dataset.social];if(u){a.href=u;a.target='_blank';a.rel='noopener'}else{a.hidden=true}});
 document.querySelectorAll('[data-ad-link]').forEach(a=>{const u=a.dataset.adLink==='primary'?DESIGNIFY_LINKS.primaryAd:DESIGNIFY_LINKS.secondaryAd;if(u){a.href=u;a.target='_blank';a.rel='noopener'}else{a.addEventListener('click',e=>e.preventDefault())}});
 
