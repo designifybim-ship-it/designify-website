@@ -58,8 +58,8 @@ $$('[data-chars]').forEach(h=>{
 });
 
 // ---------- Reveal on scroll ----------
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
-$$('.rv,.st').forEach(el=>io.observe(el));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in','visible');io.unobserve(e.target)}}),{threshold:0,rootMargin:'0px 0px -8% 0px'});
+$$('.rv,.st,.reveal,.stagger').forEach(el=>io.observe(el));
 
 // ---------- Magnetic buttons ----------
 if(fine&&!reduce){
@@ -251,4 +251,13 @@ const ROOT=/\/projects\//.test(location.pathname)?'../':'';
 
 // ---------- Hide offer mentions once the special has ended ----------
 if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
+
+// ---------- Top strip on tablets & phones: items take turns ----------
+(()=>{
+  const items=$$('.announce-info>span,.announce-contact>a');if(!items.length)return;
+  const mq=matchMedia('(max-width: 1100px)');let i=0,timer;
+  const step=()=>{items.forEach((el,k)=>el.classList.toggle('on',k===i));i=(i+1)%items.length};
+  const start=()=>{clearInterval(timer);items.forEach(el=>el.classList.remove('on'));if(mq.matches){i=items.length-1;step();if(!reduce)timer=setInterval(step,3500)}};
+  mq.addEventListener?mq.addEventListener('change',start):mq.addListener(start);start();
+})();
 })();
