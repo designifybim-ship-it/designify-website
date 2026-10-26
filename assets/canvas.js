@@ -51,6 +51,15 @@ $$('[data-chars]').forEach(h=>{
         frag.appendChild(w);
       });
       n.replaceWith(frag);
+    }else if(n.nodeType===1&&n.matches('.g')&&!n.matches('.rotating-word')){
+      // Gradient words move as whole words: Safari can't paint gradient text on separately animated letters
+      n.classList.add('g-split');
+      const txt=n.textContent;n.textContent='';
+      txt.split(/(\s+)/).forEach(part=>{
+        if(!part)return;
+        if(/^\s+$/.test(part)){n.appendChild(document.createTextNode(' '));return}
+        const w=document.createElement('span');w.className='word gw';w.textContent=part;w.style.transitionDelay=(0.15+i*0.025)+'s';i+=part.length;n.appendChild(w);
+      });
     }else if(n.nodeType===1&&!n.matches('.rotating-word,.box,.size')){walk(n)}
   })};
   walk(h);h.classList.add('chars');
@@ -125,7 +134,13 @@ $$('[data-filter-group]').forEach(g=>{
 
 // ---------- Services page: highlight current group tab ----------
 const st=$('.sticky-tabs[data-spy]');
-if(st){const links=$$('a',st);const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-40% 0px -55% 0px'});links.forEach(a=>{const s=$(a.getAttribute('href'));if(s)sio.observe(s)})}
+if(st){const links=$$('a',st);
+  // keep the highlighted tab in view when the row scrolls sideways on phones
+  const mark=id=>links.forEach(a=>{const on=a.getAttribute('href')==='#'+id;a.classList.toggle('on',on);if(on&&st.scrollWidth>st.clientWidth)st.scrollTo({left:a.offsetLeft-(st.clientWidth-a.offsetWidth)/2,behavior:'smooth'})});
+  const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)mark(e.target.id)}),{rootMargin:'-40% 0px -55% 0px'});
+  // back above the first section: highlight the first tab again
+  const first=$(links[0]&&links[0].getAttribute('href'));
+  if(first)addEventListener('scroll',()=>{if(first.getBoundingClientRect().top>innerHeight*.4&&!links[0].classList.contains('on'))mark(first.id)},{passive:true});links.forEach(a=>{const s=$(a.getAttribute('href'));if(s)sio.observe(s)})}
 const toc=$('.pol-toc');
 if(toc){const links=$$('a',toc);const tio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-35% 0px -60% 0px'});links.forEach(a=>{const s=$(a.getAttribute('href'));if(s)tio.observe(s)})}
 

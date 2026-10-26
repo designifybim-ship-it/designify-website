@@ -1486,3 +1486,86 @@ section.band{padding:52px 0}
 }
 @media(max-width:560px){.toolbar .tools .tools-extra a.btn{display:flex}}
 @media(max-width:960px){.sx-row .sx-n,.sx-row.on .sx-n,.sx-row:hover .sx-n{color:var(--purple)!important}.sx-row.on .sx-c,.sx-row:hover .sx-c{color:var(--purple)!important}.sx-row.on .sx-k,.sx-row:hover .sx-k{color:var(--muted)!important}}
+/* ================================================================
+   iPhone & iPad polish
+   ================================================================ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@supports not (overflow:clip){html{overflow-x:hidden}}
+a,button,label,summary{-webkit-tap-highlight-color:transparent}
+.builder-summary{-webkit-backdrop-filter:blur(12px)}
+.lightbox{-webkit-backdrop-filter:blur(8px)}
+@supports not (background:color-mix(in srgb,red 50%,blue)){.package-icon{background:linear-gradient(135deg,var(--accent),#C10DDD)}}
+@media(min-width:901px) and (hover:hover){.pan-sticky{height:100svh}}
+@media(hover:none){.package:hover{transform:none}}
+
+/* Nothing pokes past the screen edge, so the page can't slide sideways */
+.tick-clip{position:relative;z-index:2;overflow:hidden;padding:60px 0;margin:-60px 0;pointer-events:none}
+.tick-clip .ticker{pointer-events:auto}
+@media(max-width:1100px),(hover:none){.rv.l:not(.in),.rv.r:not(.in){transform:translateY(34px)}}
+
+/* Top strip: one line at a time (the old line fades out before the next fades in) */
+@media(max-width:1100px){
+  .announce-info span,.announce-info span:nth-child(2),.announce-contact a,.announce-contact a:first-child{transition:opacity .3s ease,transform .3s ease}
+  .announce-in .on{transition-delay:.32s!important}
+}
+
+/* Photo placeholders: the whole shape, centred */
+.founder-photo{height:440px;clip-path:none;align-items:center}
+.fp-blob,.fp-ring{top:0;bottom:0;left:0;right:0;margin:auto;transform:none}
+.fp-blob{width:350px;height:350px}
+.fp-ring{width:400px;height:400px}
+.founder-photo .photo-soon,.meet-photo .photo-soon{top:50%;bottom:auto;transform:translate(-50%,-50%)}
+.meet-photo{height:300px}
+.meet-blob{top:0;bottom:0;left:0;right:0;margin:auto;transform:none;width:216px;height:216px;border-radius:46% 54% 50% 50%/55% 45% 55% 45%;animation:gradshift 10s ease-in-out infinite,morph 12s ease-in-out infinite}
+.meet-photo::after{content:"";position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;width:254px;height:254px;border-radius:50%;border:1.5px dashed rgba(132,32,244,.35);animation:spin 50s linear infinite;pointer-events:none}
+.meet-photo .photo-soon{font-size:15px}
+.meet-photo .photo-soon i{width:62px;height:62px;font-size:23px}
+@media(max-width:900px){.founder-photo{height:360px}.fp-blob{width:290px;height:290px}.fp-ring{width:334px;height:334px}}
+@media(max-width:480px){.founder-photo{height:310px}.fp-blob{width:250px;height:250px}.fp-ring{width:288px;height:288px}.meet-photo{height:280px}}
+
+/* WhatsApp: just the round button on phones, so it never covers the page */
+@media(max-width:560px){.whatsapp-bubble{display:none!important}}
+
+/* Tabs and filters on phones: one neat row you can swipe */
+@media(max-width:760px){
+  .pages-tabs{flex-wrap:nowrap;overflow-x:auto;width:auto;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .pages-tabs::-webkit-scrollbar{display:none}
+  .pages-tabs button,.pages-tabs a{flex:0 0 auto;white-space:nowrap}
+  .sticky-tabs{top:78px}
+}
+
+/* Services hero picture: no empty band above it on tablets and phones */
+@media(max-width:900px){.hero-phone{display:block;max-width:440px;margin:0 auto}}
+
+/* Recent work cards: a sensible size when swiping on a tablet */
+@media(max-width:900px),(hover:none){.pan-card{width:min(72vw,330px)}}
+
+/* Service switcher on tablets: list in two columns, picture beside the details */
+@media(min-width:641px) and (max-width:1000px){
+  .sw-list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px}
+  .sw-list .layer{margin-bottom:0}
+  .layers-stage{grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:28px;align-items:center}
+  .stage-art{max-width:none}
+}
+
+/* Monthly packages on tablets: full-width cards, features beside the price */
+@media(min-width:681px) and (max-width:1000px){
+  .pricing-packages{max-width:none;gap:30px}
+  .package{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:34px;align-content:start;padding:30px}
+  .package>*{grid-column:1}
+  .package .features{grid-column:2;grid-row:1/span 7;margin:0;padding:4px 0 4px 32px;border:0;border-left:1px dashed #E6DAF5;align-content:center}
+  .package-icon,.package-tier{justify-self:start}
+  .package .starting{margin-top:18px}
+}
+
+/* Wide content never pushes the side column off the screen */
+.contact-layout{grid-template-columns:minmax(0,1fr) 340px}
+.custom-builder-v2{grid-template-columns:minmax(0,1fr) 360px}
+@media(max-width:1000px){.contact-layout,.custom-builder-v2{grid-template-columns:minmax(0,1fr)}}
+
+/* Gradient words in animated headings: each word carries its own gradient (Safari needs this) */
+.chars .g.g-split{background:none!important;color:inherit!important}
+.chars .gw{display:inline-block;white-space:nowrap;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;opacity:0;transform:translateY(.5em) rotate(6deg);transition:opacity .6s var(--ease),transform .7s var(--spring)}
+.chars.in .gw{opacity:1;transform:none}
+.band-purple .chars .gw{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)}
+@media(prefers-reduced-motion:reduce){.chars .gw{opacity:1!important;transform:none!important}}
