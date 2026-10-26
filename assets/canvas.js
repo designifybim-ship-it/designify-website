@@ -125,7 +125,13 @@ $$('[data-filter-group]').forEach(g=>{
 
 // ---------- Services page: highlight current group tab ----------
 const st=$('.sticky-tabs[data-spy]');
-if(st){const links=$$('a',st);const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-40% 0px -55% 0px'});links.forEach(a=>{const s=$(a.getAttribute('href'));if(s)sio.observe(s)})}
+if(st){const links=$$('a',st);
+  // keep the highlighted tab in view when the row scrolls sideways on phones
+  const mark=id=>links.forEach(a=>{const on=a.getAttribute('href')==='#'+id;a.classList.toggle('on',on);if(on&&st.scrollWidth>st.clientWidth)st.scrollTo({left:a.offsetLeft-(st.clientWidth-a.offsetWidth)/2,behavior:'smooth'})});
+  const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)mark(e.target.id)}),{rootMargin:'-40% 0px -55% 0px'});
+  // back above the first section: highlight the first tab again
+  const first=$(links[0]&&links[0].getAttribute('href'));
+  if(first)addEventListener('scroll',()=>{if(first.getBoundingClientRect().top>innerHeight*.4&&!links[0].classList.contains('on'))mark(first.id)},{passive:true});links.forEach(a=>{const s=$(a.getAttribute('href'));if(s)sio.observe(s)})}
 const toc=$('.pol-toc');
 if(toc){const links=$$('a',toc);const tio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-35% 0px -60% 0px'});links.forEach(a=>{const s=$(a.getAttribute('href'));if(s)tio.observe(s)})}
 
