@@ -52,13 +52,13 @@ $$('[data-chars]').forEach(h=>{
       });
       n.replaceWith(frag);
     }else if(n.nodeType===1&&n.matches('.g')&&!n.matches('.rotating-word')){
-      // Gradient words move as whole words: Safari can't paint gradient text on separately animated letters
+      // Gradient words move as whole words: the animation sits on an outer span and the gradient on an inner one, which Safari can paint
       n.classList.add('g-split');
       const txt=n.textContent;n.textContent='';
       txt.split(/(\s+)/).forEach(part=>{
         if(!part)return;
         if(/^\s+$/.test(part)){n.appendChild(document.createTextNode(' '));return}
-        const w=document.createElement('span');w.className='word gw';w.textContent=part;w.style.transitionDelay=(0.15+i*0.025)+'s';i+=part.length;n.appendChild(w);
+        const w=document.createElement('span');w.className='word gw';const t=document.createElement('span');t.className='gt';t.textContent=part;w.appendChild(t);w.style.transitionDelay=(0.15+i*0.025)+'s';i+=part.length;n.appendChild(w);
       });
     }else if(n.nodeType===1&&!n.matches('.rotating-word,.box,.size')){walk(n)}
   })};
