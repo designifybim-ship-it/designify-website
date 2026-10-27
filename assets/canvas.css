@@ -1632,3 +1632,6 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
 .project-hero .ph-grid,.page-hero .ph-grid:has(>div:only-child){grid-template-columns:1fr}
 .p-meta{margin-top:10px;font-weight:600;color:var(--purple)}
 .p-tags{justify-content:flex-start;margin-top:12px}
+/* Price cards: the price line always sits at the bottom, so cards in a row line up */
+.comp .spec{margin-top:auto}
+.comp>p{margin-bottom:22px}
