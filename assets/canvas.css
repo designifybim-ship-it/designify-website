@@ -1624,3 +1624,11 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
   .pages-tabs::-webkit-scrollbar{display:none}
   .pages-tabs button,.pages-tabs a{flex:0 0 auto;white-space:nowrap}
 }
+
+/* Simple call-to-action band (no side box) */
+.cta-block.solo{grid-template-columns:1fr}
+.cta-block.solo .cta-main p{max-width:52ch}
+/* Project pages: details under the title instead of a box */
+.project-hero .ph-grid,.page-hero .ph-grid:has(>div:only-child){grid-template-columns:1fr}
+.p-meta{margin-top:10px;font-weight:600;color:var(--purple)}
+.p-tags{justify-content:flex-start;margin-top:12px}
