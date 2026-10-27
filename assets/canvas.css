@@ -1635,3 +1635,5 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
 /* Price cards: the price line always sits at the bottom, so cards in a row line up */
 .comp .spec{margin-top:auto}
 .comp>p{margin-bottom:22px}
+/* Price card descriptions always take three lines' worth of space, so text blocks match too */
+.price-service>p{line-height:1.6;min-height:4.8em}
