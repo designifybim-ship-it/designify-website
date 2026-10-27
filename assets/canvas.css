@@ -1565,7 +1565,8 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
 
 /* Gradient words in animated headings: each word carries its own gradient (Safari needs this) */
 .chars .g.g-split{background:none!important;color:inherit!important}
-.chars .gw{display:inline-block;white-space:nowrap;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;opacity:0;transform:translateY(.5em) rotate(6deg);transition:opacity .6s var(--ease),transform .7s var(--spring)}
+.chars .gw{display:inline-block;white-space:nowrap;opacity:0;transform:translateY(.5em) rotate(6deg);transition:opacity .6s var(--ease),transform .7s var(--spring)}
 .chars.in .gw{opacity:1;transform:none}
-.band-purple .chars .gw{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)}
+.chars .gw .gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.band-purple .chars .gw .gt{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)}
 @media(prefers-reduced-motion:reduce){.chars .gw{opacity:1!important;transform:none!important}}
