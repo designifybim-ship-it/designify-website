@@ -1570,3 +1570,65 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
 .chars .gw .gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .band-purple .chars .gw .gt{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)}
 @media(prefers-reduced-motion:reduce){.chars .gw{opacity:1!important;transform:none!important}}
+
+/* ================================================================
+   Breathing room on phones & tablets (nothing squeezed together)
+   ================================================================ */
+@media(max-width:1100px){
+  /* headings: letters and lines less tightly packed */
+  h1,h2,.sec-title,.page-hero h1,.hero h1,.cta-main h2,.group .side h2,.stage-copy h3{letter-spacing:-.022em;line-height:1.16}
+  /* section headings use the full width instead of a narrow column */
+  .sec-title,.page-hero h1,.hero h1{max-width:none}
+  .sec-head{margin-bottom:28px;gap:18px}
+  .sec-intro,.page-hero .lead{max-width:62ch}
+  /* more space between sections */
+  section{padding:60px 0}
+  section.band{padding:64px 0}
+  .page-hero{padding:28px 0 44px}
+  .meet{padding:56px 0 8px}
+  /* service groups: big number no longer crowds the title */
+  .group .side .gn{line-height:.9;margin-bottom:6px}
+  .group .side h2{margin:10px 0 12px}
+  .group{gap:34px}
+  /* contact form steps */
+  .builder-step h2{margin:14px 0 10px}
+  .builder-step>h2+.form-grid,.builder-step>h2+div{margin-top:18px}
+  .builder-step>p,.step-helper{margin-bottom:20px}
+  .form-grid{gap:20px}
+  .contact-service-grid{gap:12px}
+  .select-card{padding:16px 40px 16px 16px;gap:4px 14px}
+  .select-card small{line-height:1.45}
+}
+@media(max-width:700px){
+  section{padding:52px 0}
+  section.band{padding:56px 0}
+  .page-hero{padding:24px 0 40px}
+  .meet{padding:48px 0 4px}
+  .sec-head{margin-bottom:24px;gap:16px}
+  .hero-actions{gap:12px}
+  .builder-step{padding:26px 20px}
+  .builder-step h2{margin:12px 0 10px}
+}
+/* Recent work strip: room above its heading when it becomes a swipe row */
+@media(max-width:900px),(hover:none){.pan-sticky{padding-top:56px;padding-bottom:12px}}
+@media(max-width:700px){.pan-sticky{padding-top:48px}}
+/* Homepage headline keeps "feels intentional." on one line on phones */
+@media(max-width:700px){.hero h1{letter-spacing:-.03em}}
+@media(max-width:420px){.hero h1{font-size:40px}}
+@media(max-width:350px){.hero h1{font-size:34px}}
+/* About quote: the big quote mark sits above the words on phones instead of over them */
+@media(max-width:700px){.pull{padding:58px 22px 32px}.pull .q-mark{left:22px;top:-4px;font-size:96px}.pull p{letter-spacing:-.02em}}
+/* Pricing and portfolio filters: one swipeable row on tablets too */
+@media(max-width:1100px){
+  .pages-tabs{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .pages-tabs::-webkit-scrollbar{display:none}
+  .pages-tabs button,.pages-tabs a{flex:0 0 auto;white-space:nowrap}
+}
+
+/* Simple call-to-action band (no side box) */
+.cta-block.solo{grid-template-columns:1fr}
+.cta-block.solo .cta-main p{max-width:52ch}
+/* Project pages: details under the title instead of a box */
+.project-hero .ph-grid,.page-hero .ph-grid:has(>div:only-child){grid-template-columns:1fr}
+.p-meta{margin-top:10px;font-weight:600;color:var(--purple)}
+.p-tags{justify-content:flex-start;margin-top:12px}
