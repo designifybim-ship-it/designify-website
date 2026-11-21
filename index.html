@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 
 <html lang="en"><head>
+<script>
+  // Send direct /index.html visits to the clean homepage URL.
+  if (/\/index\.html$/.test(window.location.pathname)) {
+    window.location.replace(window.location.pathname.replace(/index\.html$/, '') + window.location.search + window.location.hash);
+  }
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y71VVHPDCJ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -10,9 +16,9 @@
   gtag('js', new Date());
 
   gtag('config', 'G-Y71VVHPDCJ');
-</script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Designify | Graphic Design & Branding in Barbados</title><meta content="Designify creates intentional branding, graphic design, websites and digital business solutions for businesses in Barbados and worldwide." name="description"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="assets/canvas.css?v=20261027e" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" referrerpolicy="no-referrer" rel="stylesheet"/><link rel="icon" type="image/x-icon" href="favicon.ico"/><link rel="icon" type="image/png" sizes="64x64" href="favicon.png"/><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/><link rel="canonical" href="https://designifybim-ship-it.github.io/designify-website/"/>
+</script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Designify | Graphic Design & Branding in Barbados</title><meta content="Designify creates intentional branding, graphic design, websites and digital business solutions for businesses in Barbados and worldwide." name="description"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="assets/canvas.css?v=20261027e" rel="stylesheet"/><link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" referrerpolicy="no-referrer" rel="stylesheet"/><link rel="icon" type="image/x-icon" href="favicon.ico"/><link rel="icon" type="image/png" sizes="64x64" href="favicon.png"/><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/><link rel="canonical" href="https://designifybim.com/"/>
 <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://designifybim-ship-it.github.io/designify-website/"/>
+<meta property="og:url" content="https://designifybim.com/"/>
 <meta property="og:title" content="Designify | Graphic Design & Branding in Barbados"/>
 <meta property="og:description" content="Designify creates intentional branding, graphic design, websites and digital business solutions for businesses in Barbados and worldwide."/>
 <meta property="og:image" content="https://designifybim-ship-it.github.io/designify-website/assets/images/designify-share.jpg"/>
