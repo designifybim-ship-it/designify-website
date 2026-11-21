@@ -240,7 +240,7 @@ const whatsappContact=document.querySelector('.whatsapp-contact');if(whatsappCon
       qs.set('custom_services',labels.join(', '));
       qs.set('revision_rounds',String(revisions));
       qs.set('estimate_bbd',String(sum));
-      cta.href='contact.html?'+qs.toString();
+      cta.href='/contact?'+qs.toString();
       cta.classList.toggle('is-empty',selected.length===0);
     }
     document.dispatchEvent(new CustomEvent('designify:pricechange'));
