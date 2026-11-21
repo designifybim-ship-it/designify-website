@@ -14,7 +14,7 @@ if(!reduce){
   document.addEventListener('click',e=>{
     const a=e.target.closest('a[href]');if(!a||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
     const url=new URL(a.href,location.href);
-    if(url.origin!==location.origin||url.pathname===location.pathname||!/\.html$|\/$/.test(url.pathname))return;
+    if(url.origin!==location.origin||url.pathname===location.pathname||!/^(?:\/$|\/(?:projects\/)?[a-z0-9-]+(?:\.html)?)$/.test(url.pathname))return;
     e.preventDefault();try{sessionStorage.setItem('dfy-curtain','1')}catch{}
     cur.classList.remove('in');cur.classList.add('out');setTimeout(()=>location.href=a.href,480);
   });
@@ -203,7 +203,7 @@ $$('.rotating-word[data-words]').forEach(el=>{
   const P=/\/projects\//.test(location.pathname)?'../':'';
   const box=document.createElement('section');
   box.className='cookie';box.setAttribute('aria-label','Cookie notice');
-  box.innerHTML=`<h2>Cookies on this site</h2><p>Designify uses cookies for basic analytics, to see which pages are helpful and improve the site. You can accept or decline. <a href="${P}policies.html#privacy">Privacy Policy</a></p><div class="cookie-actions"><button type="button" class="btn btn-primary" data-c="accepted">Accept</button><button type="button" class="btn btn-line" data-c="declined">Decline</button></div>`;
+  box.innerHTML=`<h2>Cookies on this site</h2><p>Designify uses cookies for basic analytics, to see which pages are helpful and improve the site. You can accept or decline. <a href="${P}/policies#privacy">Privacy Policy</a></p><div class="cookie-actions"><button type="button" class="btn btn-primary" data-c="accepted">Accept</button><button type="button" class="btn btn-line" data-c="declined">Decline</button></div>`;
   document.body.appendChild(box);
   const show=()=>{box.hidden=false;requestAnimationFrame(()=>box.classList.add('show'))};
   const hide=()=>{box.classList.remove('show');setTimeout(()=>box.hidden=true,600)};
@@ -223,7 +223,7 @@ const promoLive=!!PROMO&&PROMO.enabled&&new Date()<=new Date(PROMO.endDate+'T23:
 const ROOT=/\/projects\//.test(location.pathname)?'../':'';
 (()=>{
   if(!promoLive)return;
-  if(/contact\.html$|404\.html$/.test(location.pathname)||$('.nf'))return;
+  if(/\/contact(?:\.html)?$|\/404(?:\.html)?$/.test(location.pathname)||$('.nf'))return;
   const KEY='dfy-promo-'+PROMO.code;let seen=null;try{seen=localStorage.getItem(KEY)}catch{}
   if(seen)return;
   const remember=v=>{try{localStorage.setItem(KEY,v)}catch{}};
@@ -231,7 +231,7 @@ const ROOT=/\/projects\//.test(location.pathname)?'../':'';
   card.innerHTML=`<button type="button" class="promo-x" aria-label="Close"><i aria-hidden="true" class="fa-solid fa-xmark"></i></button>
     <span class="freebie"><i aria-hidden="true" class="fa-solid fa-gift"></i>${PROMO.tag}</span>
     <h2>${PROMO.title}</h2><p>${PROMO.text}</p>
-    <a class="btn btn-primary promo-cta" href="${ROOT}contact.html?offer=${PROMO.code}">${PROMO.button} <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></a>
+    <a class="btn btn-primary promo-cta" href="/contact?offer=${PROMO.code}">${PROMO.button} <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></a>
     <small class="promo-terms">${PROMO.terms}</small>`;
   document.body.appendChild(card);
   const close=()=>{card.classList.remove('show');setTimeout(()=>card.hidden=true,500);remember('closed')};
