@@ -283,14 +283,19 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   const head=document.createElement('span');head.className='path-head';head.setAttribute('aria-hidden','true');s.appendChild(head);
   const steps=[...s.querySelectorAll('.step')],n=steps.length;
   if(reduce){s.style.setProperty('--p',1);steps.forEach(x=>x.classList.add('lit'));return}
+  const set=p=>{s.style.setProperty('--p',p.toFixed(3));steps.forEach((x,k)=>x.classList.toggle('lit',p>0&&p>=k/(n-1)-.02));s.classList.toggle('done',p>=1)};
+  const vertical=matchMedia('(max-width: 900px)');
+  // Phones (steps stacked): each step lights as you scroll down to it
   let raf=0;
-  const update=()=>{raf=0;
-    const r=s.getBoundingClientRect(),vh=innerHeight;
-    const p=Math.min(1,Math.max(0,(vh*.85-r.top)/(r.height+vh*.4)));
-    s.style.setProperty('--p',p.toFixed(3));
-    steps.forEach((x,k)=>x.classList.toggle('lit',p>0&&p>=k/(n-1)-.02));
-  };
-  addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(update)},{passive:true});
-  addEventListener('resize',update);update();
+  const follow=()=>{raf=0;if(!vertical.matches)return;
+    const r=s.getBoundingClientRect();set(Math.min(1,Math.max(0,(innerHeight*.7-r.top)/r.height)))};
+  addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(follow)},{passive:true});
+  // Computers (steps in a row): once the row is in view, the path plays through on its own
+  let played=false;
+  const play=()=>{played=true;const t0=performance.now(),dur=2200;
+    const tick=now=>{const t=Math.min(1,(now-t0)/dur);set(1-Math.pow(1-t,2));if(t<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)};
+  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!vertical.matches&&!played)play()}),{threshold:.5}).observe(s);
+  const mode=()=>{if(vertical.matches)follow();else if(played)set(1)};
+  vertical.addEventListener?vertical.addEventListener('change',mode):vertical.addListener(mode);follow();
 })();
 })();

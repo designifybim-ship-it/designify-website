@@ -1909,3 +1909,6 @@ body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px
 @media(prefers-reduced-motion:reduce){.steps.path .path-head{display:none}}
 /* purple sections keep their soft logo gradient (the pattern switch-off above removed it) */
 .band-purple,.band-purple[class*="bg-"]{background-image:var(--grad-deep)!important;background-size:100% 100%!important;background-repeat:no-repeat!important}
+/* process path: the glowing dot slides behind the step icons and fades out at the end */
+.steps.path .path-head{z-index:0;transition:left .2s linear,top .2s linear,opacity .6s}
+.steps.path.done .path-head{opacity:0}
