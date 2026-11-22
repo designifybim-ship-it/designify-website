@@ -1941,12 +1941,12 @@ body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px
 .chat3d-phone model-viewer{width:100%;height:100%;--poster-color:transparent;background:transparent;outline:none}
 .chat3d-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .6s}
 .chat3d-phone.ready .chat3d-poster{opacity:0;pointer-events:none}
-.pop{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:16px;background:#fff;box-shadow:0 14px 34px rgba(79,35,120,.16);font-size:14px;font-weight:600;white-space:nowrap;opacity:0;scale:.6;transition:opacity .35s,scale .5s var(--spring);pointer-events:none}
-.pop i{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--grad);color:#fff;font-size:12px}
-.pop.show{opacity:1;scale:1}
-.pop-1{left:4%;top:20%;border-bottom-left-radius:4px}
-.pop-2{right:2%;top:44%;border-bottom-right-radius:4px}
-.pop-3{left:8%;bottom:16%;border-bottom-left-radius:4px}
+.chat-pop{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:16px;background:#fff;box-shadow:0 14px 34px rgba(79,35,120,.16);font-size:14px;font-weight:600;white-space:nowrap;opacity:0;scale:.6;transition:opacity .35s,scale .5s var(--spring);pointer-events:none}
+.chat-pop i{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--grad);color:#fff;font-size:12px}
+.chat-pop.show{opacity:1;scale:1}
+.chat-pop-1{left:4%;top:20%;border-bottom-left-radius:4px}
+.chat-pop-2{right:2%;top:44%;border-bottom-right-radius:4px}
+.chat-pop-3{left:8%;bottom:16%;border-bottom-left-radius:4px}
 .chat3d-hint{position:absolute;left:50%;bottom:4px;translate:-50% 0;font-size:12.5px;font-weight:600;color:var(--muted);opacity:.8}
 .chat3d-hint i{color:var(--purple);margin-right:4px}
 @media(max-width:900px){
@@ -1955,8 +1955,8 @@ body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px
   .chat3d .sec-intro{margin-left:auto;margin-right:auto}
   .chat3d-copy .hero-actions{justify-content:center}
   .chat3d-stage{height:520px}
-  .pop{font-size:12.5px;padding:8px 12px}.pop i{width:24px;height:24px}
-  .pop-1{left:0;top:12%}.pop-2{right:0;top:46%}.pop-3{left:2%;bottom:14%}
+  .chat-pop{font-size:12.5px;padding:8px 12px}.chat-pop i{width:24px;height:24px}
+  .chat-pop-1{left:0;top:12%}.chat-pop-2{right:0;top:46%}.chat-pop-3{left:2%;bottom:14%}
 }
 @media(max-width:420px){.chat3d-title .ct-b{white-space:normal}.chat3d-stage{height:460px}}
 @media(prefers-reduced-motion:reduce){.chat3d::before,.chat3d::after,.chat3d-glow,.chat3d-phone,.ct-caret{animation:none}}
@@ -1974,3 +1974,12 @@ body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px
 @media(max-width:900px){.chat3d-list{margin:20px auto 4px;text-align:left}}
 @media(max-width:420px){.chat3d-list{grid-template-columns:1fr;max-width:280px}}
 @media(prefers-reduced-motion:reduce){.chat3d-list li{opacity:1;translate:none}}
+/* phone buzzes when a message lands, with a ring pulse behind it */
+.chat3d-phone.buzz model-viewer{animation:buzz .55s linear}
+@keyframes buzz{0%,100%{translate:0 0;rotate:0deg}10%{translate:-6px 0;rotate:-2deg}20%{translate:6px 0;rotate:2deg}30%{translate:-6px 0;rotate:-2deg}40%{translate:6px 0;rotate:2deg}50%{translate:-4px 0;rotate:-1deg}60%{translate:4px 0;rotate:1deg}70%{translate:-2px 0}80%{translate:2px 0}}
+.chat3d-phone::after{content:"";position:absolute;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:3px solid rgba(177,24,215,.45);opacity:0;pointer-events:none}
+.chat3d-phone.buzz::after{animation:ring 1s var(--ease)}
+@keyframes ring{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.7)}}
+.chat3d-phone.buzz~.chat3d-glow,.chat3d-stage:has(.buzz) .chat3d-glow{animation:glowPulse 5s ease-in-out infinite,glowFlash .8s ease-out}
+@keyframes glowFlash{0%{opacity:1;scale:1.25}100%{scale:1}}
+@media(prefers-reduced-motion:reduce){.chat3d-phone.buzz model-viewer,.chat3d-phone.buzz::after{animation:none}}
