@@ -1659,32 +1659,3 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
   .tools a{border-radius:16px!important}
   .tools a.active{background:var(--lav)!important;color:var(--purple)!important}
 }
-
-/* ================================================================
-   Portfolio gallery: picture cards, designs fan out on hover
-   ================================================================ */
-.pf2-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 26px}
-.pf2{display:flex;flex-direction:column;color:inherit}
-.pf2.hide{display:none}
-.pf2.pop{animation:swapin .5s var(--spring) both}
-.pf2-cover{position:relative;aspect-ratio:4/4.3;border-radius:24px;background:var(--lav);overflow:hidden;isolation:isolate}
-.pf2-cover img{position:absolute;left:50%;top:50%;width:68%;height:82%;object-fit:cover;border-radius:12px;border:5px solid #fff;box-shadow:0 14px 34px rgba(79,35,120,.2);transform:translate(-50%,-50%);transition:transform .6s var(--spring)}
-.pf2-cover.n1 img{width:80%;height:86%;object-fit:contain;background:#fff;border-width:0;box-shadow:0 14px 34px rgba(79,35,120,.16)}
-.pf2-cover.n2 img:nth-child(1),.pf2-cover.n3 img:nth-child(2){transform:translate(-62%,-50%) rotate(-6deg) scale(.94)}
-.pf2-cover.n3 img:nth-child(3){transform:translate(-38%,-50%) rotate(6deg) scale(.94)}
-.pf2-cover.n2 img:nth-child(2),.pf2-cover.n3 img:nth-child(1){z-index:2}
-.pf2-cover.n3 img:nth-child(1){z-index:3}
-.pf2:hover .pf2-cover.n2 img:nth-child(1),.pf2:hover .pf2-cover.n3 img:nth-child(2){transform:translate(-88%,-48%) rotate(-12deg) scale(.9)}
-.pf2:hover .pf2-cover.n3 img:nth-child(3){transform:translate(-12%,-48%) rotate(12deg) scale(.9)}
-.pf2:hover .pf2-cover.n2 img:nth-child(2){transform:translate(-30%,-50%) rotate(4deg)}
-.pf2:hover .pf2-cover.n3 img:nth-child(1),.pf2:hover .pf2-cover.n1 img{transform:translate(-50%,-52%) scale(1.04)}
-.pf2-count{position:absolute;z-index:5;left:14px;top:14px;padding:6px 13px;border-radius:999px;background:#fff;color:var(--purple);font-size:12.5px;font-weight:700;box-shadow:0 6px 16px rgba(79,35,120,.12)}
-.pf2-cover::after{content:"\f061";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;z-index:5;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--purple);color:#fff;font-size:15px;transform:rotate(-45deg) scale(.8);opacity:0;transition:.35s var(--spring)}
-.pf2:hover .pf2-cover::after,.pf2:focus-visible .pf2-cover::after{opacity:1;transform:none}
-.pf2-meta{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:16px}
-.pf2-meta h3{font-size:22px;letter-spacing:-.03em;line-height:1.15}
-.pf2-meta span{flex:0 0 auto;font-size:13px;font-weight:600;color:var(--purple)}
-.pf2 p{margin-top:6px;font-size:14.5px;color:var(--muted);line-height:1.55}
-.pf2-tags{justify-content:flex-start!important;margin-top:12px}
-@media(max-width:1000px){.pf2-grid{grid-template-columns:1fr 1fr;gap:28px 18px}}
-@media(max-width:600px){.pf2-grid{grid-template-columns:1fr}.pf2-meta{flex-direction:column;gap:2px}}
