@@ -1865,3 +1865,21 @@ body{background:#fff!important;background-image:none!important}
 .cta-side .newsletter-form input[type=email]:focus{box-shadow:inset 0 0 0 2px var(--purple),0 0 0 4px rgba(156,59,236,.12)!important}
 .cta-side .newsletter-form .btn{border-radius:14px!important}
 @media(prefers-reduced-motion:reduce){.cta-main::before,.cta-main .shape{animation:none}}
+
+/* ================================================================
+   Soft logo gradients (the logo's purple, magenta and blue, toned down)
+   ================================================================ */
+:root{
+  --grad:linear-gradient(115deg,#9C3BEC 0%,#AC2BE0 48%,#8A5BEA 100%);
+  --grad-deep:linear-gradient(125deg,#7E2FE0 0%,#9C3BEC 45%,#A92ADC 75%,#7F6CE6 100%);
+}
+.g,.chars .gw .gt{background:var(--grad);-webkit-background-clip:text;background-clip:text}
+.cta-main{background:var(--grad-deep)!important}
+.band-purple{background-color:#7E2FE0;background-image:var(--grad-deep)}
+.band-purple .g,.band-purple .gradient,.band-purple .chars .gw .gt{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)!important;-webkit-background-clip:text!important;background-clip:text!important}
+.h2-frame,.me-circle{background:var(--grad-deep)}
+.svc-ic,.announce,.h2-faces span{background:var(--grad)}
+.btn-primary{background:var(--grad);background-size:160% 100%}
+.btn-primary:hover{background-position:100% 0}
+/* a faint wash of the logo colours behind the page */
+body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px),radial-gradient(60% 45% at 100% 0%,rgba(177,24,215,.07),transparent 70%),radial-gradient(55% 40% at 0% 35%,rgba(102,123,226,.06),transparent 70%);background-size:28px 28px,100% 100%,100% 100%}
