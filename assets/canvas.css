@@ -7,9 +7,9 @@
 :root{
   --purple:#8420F4;--purple2:#A31CF0;--pink:#C10DDD;--blue:#1593F5;
   --ink:#26232B;--muted:#6F6877;--lav:#F7F1FF;--lav2:#EFE4FF;--line:#EDE4F6;
-  --grad:linear-gradient(100deg,#8420F4 0%,#A31CF0 42%,#C10DDD 72%,#1593F5 118%);
-  --ga:linear-gradient(135deg,#8420F4,#A31CF0);--gb:linear-gradient(135deg,#1593F5,#8420F4);
-  --gc:linear-gradient(135deg,#C10DDD,#1593F5);--gd:linear-gradient(135deg,#A31CF0,#C10DDD);
+  --grad:#8420F4;
+  --ga:#8420F4;--gb:#1593F5;
+  --gc:#C10DDD;--gd:#5A12C2;
   --canvas:#FBF9FE;--ruler:22px;
   --ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
   --shadow:0 20px 60px rgba(79,35,120,.14);--shadow-sm:0 6px 22px rgba(79,35,120,.08);
@@ -535,7 +535,7 @@ body.has-rulers .sticky-tabs{top:118px}
 .package{position:relative;display:flex;flex-direction:column;padding:32px 28px 28px;border-radius:6px;background:#fff;box-shadow:0 0 0 1px var(--line),var(--shadow-sm);transition:transform .5s var(--spring),box-shadow .3s}
 .package:hover{transform:translateY(-8px)}
 .package .ab-name{position:absolute;top:-24px;left:0;font-size:11.5px;font-weight:600;color:var(--muted)}
-.package-icon{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;color:#fff;font-size:22px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#C10DDD))}
+.package-icon{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;color:#fff;font-size:22px;background:var(--accent)}
 .package-tier{align-self:flex-start;margin-top:20px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .package h3{font-size:30px;margin:6px 0 10px}
 .package-desc{font-size:14.5px;color:var(--muted)}
@@ -799,7 +799,7 @@ body.has-rulers .sticky-tabs{top:118px}
 /* About */
 .version{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
 .history{position:relative;display:grid;gap:22px;padding-left:30px}
-.history::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--purple),var(--blue))}
+.history::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--purple)}
 .ver{position:relative;padding:22px 24px;border-radius:14px;background:#fff;box-shadow:0 0 0 1px var(--line)}
 .ver::before{content:"";position:absolute;left:-28px;top:26px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--purple)}
 .ver small{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--purple)}
@@ -1096,7 +1096,7 @@ body{background:#fff;background-image:none}
 .builder-step::before{content:none}
 .layers-stage{background-image:none}
 
-.foot-big{background:linear-gradient(100deg,#8420F4 0%,#A31CF0 30%,#C10DDD 60%,#1593F5 90%,#8420F4 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 9s linear infinite}
+.foot-big{background:#8420F4;background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 9s linear infinite}
 @keyframes shimmer{to{background-position:200% center}}
 
 /* Portfolio preview: show only the designs a project actually has */
@@ -1246,21 +1246,21 @@ body{background:#fff;background-image:none}
    Purple patterned bands (used on some sections only)
    ===================================================================== */
 section.band{padding:56px 0;position:relative}
-.bg-dots{background:radial-gradient(rgba(132,32,244,.16) 1.3px,transparent 1.6px) 0 0/22px 22px,linear-gradient(180deg,#F7F1FF,#F1E6FF)}
-.bg-grid{background:linear-gradient(rgba(132,32,244,.07) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(132,32,244,.07) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(160deg,#FBF7FF 0%,#F3E8FF 60%,#EEF4FF 100%)}
-.bg-diag{background:repeating-linear-gradient(135deg,rgba(163,28,240,.06) 0 2px,transparent 2px 16px),linear-gradient(180deg,#F9F4FF,#F0E4FF)}
-.bg-plus{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpath d='M18 13v10M13 18h10' stroke='%238420F4' stroke-opacity='.16' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"),linear-gradient(180deg,#F8F3FF,#EFE3FF)}
+.bg-dots{background:radial-gradient(rgba(132,32,244,.16) 1.3px,transparent 1.6px) 0 0/22px 22px,#F7F1FF}
+.bg-grid{background:linear-gradient(rgba(132,32,244,.07) 1px,transparent 1px) 0 0/40px 40px,linear-gradient(90deg,rgba(132,32,244,.07) 1px,transparent 1px) 0 0/40px 40px,#FBF7FF}
+.bg-diag{background:repeating-linear-gradient(135deg,rgba(163,28,240,.06) 0 2px,transparent 2px 16px),#F9F4FF}
+.bg-plus{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpath d='M18 13v10M13 18h10' stroke='%238420F4' stroke-opacity='.16' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"),#F8F3FF}
 .band-purple{color:#fff;background-color:#6D16D9}
-.bg-waves{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Cpath d='M0 20 Q30 4 60 20 T120 20' fill='none' stroke='%23ffffff' stroke-opacity='.10' stroke-width='2'/%3E%3C/svg%3E") 0 0/120px 40px,linear-gradient(120deg,#5A12C2 0%,#8420F4 45%,#A31CF0 75%,#C10DDD 100%)}
-.bg-rings{background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.10) 0 2px,transparent 3px) 0 0/34px 34px,radial-gradient(circle at 100% 0%,rgba(193,13,221,.55),transparent 55%),radial-gradient(circle at 0% 100%,rgba(21,147,245,.35),transparent 50%),linear-gradient(135deg,#4F0FB0,#7A1DEA)}
+.bg-waves{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Cpath d='M0 20 Q30 4 60 20 T120 20' fill='none' stroke='%23ffffff' stroke-opacity='.10' stroke-width='2'/%3E%3C/svg%3E") 0 0/120px 40px,#5A12C2}
+.bg-rings{background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.10) 0 2px,transparent 3px) 0 0/34px 34px,radial-gradient(circle at 100% 0%,rgba(193,13,221,.55),transparent 55%),radial-gradient(circle at 0% 100%,rgba(21,147,245,.35),transparent 50%),#4F0FB0}
 
 /* Text and cards on the purple bands */
 .band-purple .sec-title,.band-purple h2,.band-purple h3{color:#fff}
 .band-purple .sec-intro,.band-purple .step p{color:rgba(255,255,255,.82)}
-.band-purple .g,.band-purple .gradient{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+.band-purple .g,.band-purple .gradient{background:#F2C6FF!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
 .band-purple .step-n{color:#F2C6FF}
 .band-purple .steps::before{background:rgba(255,255,255,.22)}
-.band-purple .steps::after{background:linear-gradient(90deg,#fff,#F2C6FF)}
+.band-purple .steps::after{background:#F2C6FF}
 .band-purple .step-dot{background:#fff;color:var(--purple);box-shadow:0 10px 24px rgba(40,0,90,.25)}
 .band-purple .flow-foot{background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
 .band-purple .flow-foot span{color:#fff}
@@ -1311,10 +1311,10 @@ section.band{padding:52px 0}
    Extras: holiday card, Meet Ariel, Instagram, freebie, turnaround,
    project quotes, 404
    ===================================================================== */
-.news.holiday{background:linear-gradient(100deg,#FFF 0%,#FBF5FF 100%)}
+.news.holiday{background:#FBF5FF}
 .news.holiday .live{color:var(--pink)}
 .news.holiday .live::before{background:var(--pink)}
-.news.holiday .news-ic{background:linear-gradient(135deg,#C10DDD,#8420F4);font-size:28px;animation:wiggle 4s ease-in-out infinite}
+.news.holiday .news-ic{background:#8420F4;font-size:28px;animation:wiggle 4s ease-in-out infinite}
 @keyframes wiggle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-10deg)}94%{transform:rotate(8deg)}}
 
 .meet{padding:40px 0 0}
@@ -1329,7 +1329,7 @@ section.band{padding:52px 0}
 .ig-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
 .ig-tile{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--lav)}
 .ig-tile img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
-.ig-tile span{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,rgba(132,32,244,.82),rgba(193,13,221,.82));color:#fff;font-size:28px;opacity:0;transition:opacity .35s}
+.ig-tile span{position:absolute;inset:0;display:grid;place-items:center;background:rgba(132,32,244,.82);color:#fff;font-size:28px;opacity:0;transition:opacity .35s}
 .ig-tile:hover img{transform:scale(1.08)}
 .ig-tile:hover span,.ig-tile:focus-visible span{opacity:1}
 @media(max-width:900px){.ig-grid{grid-template-columns:repeat(3,1fr)}}
@@ -1384,8 +1384,8 @@ section.band{padding:52px 0}
 
 /* ---- WhatsApp button: clean round button, centred logo ---- */
 .whatsapp-contact{width:58px;height:58px;border-radius:50%;box-shadow:0 10px 26px rgba(132,32,244,.35)}
-.wa-ic{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#8420F4,#C10DDD);color:#fff;font-size:30px}
-.whatsapp-contact:hover .wa-ic{background:linear-gradient(135deg,#6A12D4,#A31CF0)}
+.wa-ic{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:#8420F4;color:#fff;font-size:30px}
+.whatsapp-contact:hover .wa-ic{background:#6A12D4}
 .whatsapp-contact img{display:none}
 .whatsapp-bubble{right:70px}
 @media(max-width:560px){.whatsapp-contact{width:52px;height:52px}.wa-ic{font-size:27px}.whatsapp-bubble{display:none}}
@@ -1414,7 +1414,7 @@ section.band{padding:52px 0}
 .holiday-offer{margin-top:8px!important;font-size:14px!important;color:var(--ink)!important}
 .holiday-offer b{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--grad);color:#fff;font-size:13px;margin-right:4px}
 .holiday-offer span{color:#9A91A3;font-size:12.5px}
-.offer-applied{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;border-radius:16px;background:linear-gradient(100deg,#FCE7FF,#F3E8FF);box-shadow:inset 0 0 0 1.5px #EBC4FA;animation:swapin .5s var(--ease)}
+.offer-applied{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;border-radius:16px;background:#FCE7FF;box-shadow:inset 0 0 0 1.5px #EBC4FA;animation:swapin .5s var(--ease)}
 .offer-applied>i{font-size:22px;color:var(--pink);margin-top:2px}
 .offer-applied strong{display:block;font-size:15px}
 .offer-applied span{font-size:13px;color:var(--muted)}
@@ -1494,7 +1494,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 a,button,label,summary{-webkit-tap-highlight-color:transparent}
 .builder-summary{-webkit-backdrop-filter:blur(12px)}
 .lightbox{-webkit-backdrop-filter:blur(8px)}
-@supports not (background:color-mix(in srgb,red 50%,blue)){.package-icon{background:linear-gradient(135deg,var(--accent),#C10DDD)}}
+@supports not (background:color-mix(in srgb,red 50%,blue)){.package-icon{background:var(--accent)}}
 @media(min-width:901px) and (hover:hover){.pan-sticky{height:100svh}}
 @media(hover:none){.package:hover{transform:none}}
 
@@ -1568,7 +1568,7 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
 .chars .gw{display:inline-block;white-space:nowrap;opacity:0;transform:translateY(.5em) rotate(6deg);transition:opacity .6s var(--ease),transform .7s var(--spring)}
 .chars.in .gw{opacity:1;transform:none}
 .chars .gw .gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.band-purple .chars .gw .gt{background:linear-gradient(100deg,#FFFFFF,#F2C6FF)}
+.band-purple .chars .gw .gt{background:#F2C6FF}
 @media(prefers-reduced-motion:reduce){.chars .gw{opacity:1!important;transform:none!important}}
 
 /* ================================================================
@@ -1637,3 +1637,54 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent}
 .comp>p{margin-bottom:22px}
 /* Price card descriptions always take three lines' worth of space, so text blocks match too */
 .price-service>p{line-height:1.6;min-height:4.8em}
+
+/* ================================================================
+   Header: floating rounded capsule
+   ================================================================ */
+.topbar{padding:14px 0 0;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom:0!important;box-shadow:none!important;pointer-events:none}
+.topbar .toolbar{pointer-events:auto;height:72px;padding:0 10px 0 26px!important;border-radius:999px!important;background:rgba(255,255,255,.94)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 0 0 1px rgba(132,32,244,.12),0 14px 40px rgba(79,35,120,.12)!important;transition:height .3s,box-shadow .3s,width .4s var(--ease)}
+.topbar.scrolled .toolbar{height:62px;box-shadow:0 0 0 1px rgba(132,32,244,.16),0 18px 44px rgba(79,35,120,.18)!important}
+.toolbar .brand img{height:40px!important}
+.topbar.scrolled .toolbar .brand img{height:36px!important}
+.tools a{border-radius:999px!important;padding:9px 15px!important}
+.tools a::after{display:none}
+.tools a:hover{background:var(--lav)!important;color:var(--purple)}
+.tools a.active{background:var(--grad)!important;color:#fff!important;font-weight:600}
+.head-cta .btn{border-radius:999px!important}
+.menu-btn{border-radius:50%!important}
+@media(max-width:1000px){
+  .topbar{padding:10px 0 0}
+  .topbar .toolbar{height:64px;padding:0 8px 0 18px!important}
+  .tools{border-radius:28px!important}
+  .tools a{border-radius:16px!important}
+  .tools a.active{background:var(--lav)!important;color:var(--purple)!important}
+}
+
+/* ================================================================
+   Portfolio gallery: picture cards, designs fan out on hover
+   ================================================================ */
+.pf2-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px 26px}
+.pf2{display:flex;flex-direction:column;color:inherit}
+.pf2.hide{display:none}
+.pf2.pop{animation:swapin .5s var(--spring) both}
+.pf2-cover{position:relative;aspect-ratio:4/4.3;border-radius:24px;background:var(--lav);overflow:hidden;isolation:isolate}
+.pf2-cover img{position:absolute;left:50%;top:50%;width:68%;height:82%;object-fit:cover;border-radius:12px;border:5px solid #fff;box-shadow:0 14px 34px rgba(79,35,120,.2);transform:translate(-50%,-50%);transition:transform .6s var(--spring)}
+.pf2-cover.n1 img{width:80%;height:86%;object-fit:contain;background:#fff;border-width:0;box-shadow:0 14px 34px rgba(79,35,120,.16)}
+.pf2-cover.n2 img:nth-child(1),.pf2-cover.n3 img:nth-child(2){transform:translate(-62%,-50%) rotate(-6deg) scale(.94)}
+.pf2-cover.n3 img:nth-child(3){transform:translate(-38%,-50%) rotate(6deg) scale(.94)}
+.pf2-cover.n2 img:nth-child(2),.pf2-cover.n3 img:nth-child(1){z-index:2}
+.pf2-cover.n3 img:nth-child(1){z-index:3}
+.pf2:hover .pf2-cover.n2 img:nth-child(1),.pf2:hover .pf2-cover.n3 img:nth-child(2){transform:translate(-88%,-48%) rotate(-12deg) scale(.9)}
+.pf2:hover .pf2-cover.n3 img:nth-child(3){transform:translate(-12%,-48%) rotate(12deg) scale(.9)}
+.pf2:hover .pf2-cover.n2 img:nth-child(2){transform:translate(-30%,-50%) rotate(4deg)}
+.pf2:hover .pf2-cover.n3 img:nth-child(1),.pf2:hover .pf2-cover.n1 img{transform:translate(-50%,-52%) scale(1.04)}
+.pf2-count{position:absolute;z-index:5;left:14px;top:14px;padding:6px 13px;border-radius:999px;background:#fff;color:var(--purple);font-size:12.5px;font-weight:700;box-shadow:0 6px 16px rgba(79,35,120,.12)}
+.pf2-cover::after{content:"\f061";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;z-index:5;right:14px;bottom:14px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--purple);color:#fff;font-size:15px;transform:rotate(-45deg) scale(.8);opacity:0;transition:.35s var(--spring)}
+.pf2:hover .pf2-cover::after,.pf2:focus-visible .pf2-cover::after{opacity:1;transform:none}
+.pf2-meta{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:16px}
+.pf2-meta h3{font-size:22px;letter-spacing:-.03em;line-height:1.15}
+.pf2-meta span{flex:0 0 auto;font-size:13px;font-weight:600;color:var(--purple)}
+.pf2 p{margin-top:6px;font-size:14.5px;color:var(--muted);line-height:1.55}
+.pf2-tags{justify-content:flex-start!important;margin-top:12px}
+@media(max-width:1000px){.pf2-grid{grid-template-columns:1fr 1fr;gap:28px 18px}}
+@media(max-width:600px){.pf2-grid{grid-template-columns:1fr}.pf2-meta{flex-direction:column;gap:2px}}
