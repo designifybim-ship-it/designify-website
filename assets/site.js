@@ -35,13 +35,14 @@ const DESIGNIFY_SPIN={
   title:'New Year Spin',
   prizes:[
     {label:'10% off',sub:'any one-off design',code:'SPIN10',weight:16},
-    {label:'Free checklist',wheel:'Checklist',sub:'5 Things Every Brand Needs',code:'SPINLIST',weight:20},
+    {label:'Free checklist',wheel:'Checklist',sub:'5 Things Every Brand Needs',code:'SPINLIST',weight:21},
     {label:'Free revision',sub:'one extra round on your project',code:'SPINREV',weight:16},
     {label:'15% off',sub:'your first month of a package',code:'SPIN15',weight:12},
     {label:'10% off',sub:'any one-off design',code:'SPIN10',weight:14},
     {label:'Free post',sub:'a social post with any flyer order',code:'SPINPOST',weight:10},
     {label:'Free rush',sub:'rush delivery on your next order',code:'SPINRUSH',weight:10},
-    {label:'25% off',wheel:'★ 25% off',sub:'any one-off project (grand prize)',code:'SPIN25',weight:2,grand:true}
+    {label:'Grand prize',wheel:'★ Grand prize',sub:'6 free flyers or a free one-page website, your choice',code:'SPINGRAND',weight:1,grand:true,
+     terms:'Grand prize: choose 6 single-sided flyers (digital files, 2 revision rounds each, delivered within 6 weeks) or a Standard one-page website (up to 4 sections, 2 revision rounds, you supply the wording and photos; domain, hosting and paid platform plans not included). Printing not included. One grand prize winner per giveaway; if it has already been won, you will receive 25% off any one-off project instead.'}
   ],
   terms:'One spin per person. One prize per business, on projects booked by the claim date. Not exchangeable for cash or combined with other offers.'
 };

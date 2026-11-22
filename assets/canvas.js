@@ -360,7 +360,7 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   const offer=new URLSearchParams(location.search).get('offer');
   const won=offer&&C.prizes.find(p=>p.code===offer);
   if(form&&won&&(preview||now<=new Date(C.claimBy+'T23:59:59'))){
-    const label=`${C.title}: ${won.label}, ${won.sub} (code ${won.code}, claim by ${claimDate}). ${C.terms}`;
+    const label=`${C.title}: ${won.label}, ${won.sub} (code ${won.code}, claim by ${claimDate}). ${won.terms?won.terms+' ':''}${C.terms}`;
     const hid=document.createElement('input');hid.type='hidden';hid.name='special_offer';hid.value=label;form.prepend(hid);
     const note=document.createElement('div');note.className='offer-applied';
     note.innerHTML=`<i aria-hidden="true" class="fa-solid fa-gift"></i><div><strong>${C.title} prize noted: ${won.label}, ${won.sub}</strong><span>Code ${won.code}. Claim by ${claimDate}.</span></div>`;
@@ -382,6 +382,12 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   let dots='';for(let i=0;i<n*2;i++){const [x,y]=pt(i*Math.PI/n,R+9);dots+=`<circle cx="${x}" cy="${y}" r="3.2" class="sw-dot"/>`}
   const wheel=`<svg viewBox="0 0 320 320" class="sw-svg" aria-hidden="true"><defs><linearGradient id="swGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE48A"/><stop offset=".5" stop-color="#FFC83D"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs><circle cx="160" cy="160" r="${R+18}" class="sw-rim"/><g class="sw-rot">${slices}</g>${dots}<circle cx="160" cy="160" r="34" class="sw-hub"/><text x="160" y="166" text-anchor="middle" class="sw-hub-t">SPIN</text></svg>`;
 
+  // every prize and its real chance, shown before anyone spins (same prizes merged)
+  const tot=C.prizes.reduce((a,p)=>a+p.weight,0),seen={};
+  C.prizes.forEach(p=>{const k=p.code;seen[k]=seen[k]||{p,w:0};seen[k].w+=p.weight});
+  const pct=w=>{const v=w/tot*100;return v<1?v.toFixed(1):Math.round(v)};
+  const odds=Object.values(seen).sort((a,b)=>b.w-a.w).map(({p,w})=>`<li class="${p.grand?'is-grand':''}"><span>${p.grand?'★ ':''}<b>${p.label}</b> ${p.sub}</span><em>${pct(w)}%</em></li>`).join('');
+  const grand=C.prizes.find(p=>p.grand);
   const ov=document.createElement('div');ov.className='spin-ov';ov.hidden=true;
   ov.innerHTML=`<div class="spin-card" role="dialog" aria-modal="true" aria-labelledby="spinTitle">
     <button type="button" class="spin-x" aria-label="Close"><i aria-hidden="true" class="fa-solid fa-xmark"></i></button>
@@ -390,7 +396,9 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
       <span class="spin-tag"><i aria-hidden="true" class="fa-solid fa-gift"></i> ${C.title}${preview&&!live?' · preview':''}</span>
       <h2 id="spinTitle">Spin to win a <span class="g">design treat.</span></h2>
       <form class="spin-form" novalidate>
-        <p>Every spin wins something: discounts, freebies and a rare grand prize. Enter your details to spin.</p>
+        <p>Every spin wins something. Here is exactly what you can win and how likely each prize is:</p>
+        <ul class="spin-odds">${odds}</ul>
+        ${grand&&grand.terms?`<div class="spin-gt"><b>★ About the grand prize:</b> ${grand.terms.replace(/^Grand prize:\s*/,'')}</div>`:''}
         <label class="spin-f"><span>Email</span><input type="email" name="email" autocomplete="email" required placeholder="you@business.com"/></label>
         <label class="spin-f"><span>WhatsApp <em>(optional)</em></span><input type="tel" name="whatsapp" autocomplete="tel" placeholder="+1 (246) …"/></label>
         <label class="spin-ok"><input type="checkbox" required/> <span>Send me my prize and occasional Designify updates. I can unsubscribe any time.</span></label>
@@ -414,7 +422,7 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
     f.hidden=true;res.hidden=false;
     const isList=p.code==='SPINLIST';
     res.innerHTML=`<span class="spin-won">${p.grand?'★ Grand prize! ':''}${fresh?'You won!':'Your prize'}</span><h3>${p.label}</h3><p>${p.sub.charAt(0).toUpperCase()+p.sub.slice(1)}.</p>
-      <div class="spin-code"><span>Your code</span><b>${p.code}</b></div><small>Claim by ${claimDate}. ${C.terms}</small>
+      <div class="spin-code"><span>Your code</span><b>${p.code}</b></div>${p.terms?`<small class="spin-gt">${p.terms}</small>`:''}<small>Claim by ${claimDate}. ${C.terms}</small>
       <div class="hero-actions">${isList?'<a class="btn btn-primary" href="/assets/designify-brand-checklist.pdf" download><i aria-hidden="true" class="fa-solid fa-download"></i> Get the Checklist</a><a class="btn btn-line" href="/contact">Start a Project</a>':`<a class="btn btn-primary" href="/contact?offer=${p.code}">Claim My Prize <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></a>`}</div>
       ${preview?'<small class="spin-prev">Preview mode: entries are not sent and you can spin again after reloading.</small>':''}`;
   };
@@ -430,7 +438,7 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
     if(!preview){
       try{localStorage.setItem(KEY,JSON.stringify({i,code:p.code,t:Date.now()}))}catch(e){}
       const fd=new FormData();fd.append('_subject',`${C.title}: ${p.label} won`);fd.append('_captcha','false');fd.append('_template','table');
-      fd.append('email',f.email.value);fd.append('whatsapp',f.whatsapp.value||'Not given');fd.append('prize',`${p.label}, ${p.sub}`);fd.append('code',p.code);fd.append('claim_by',claimDate);
+      fd.append('email',f.email.value);fd.append('whatsapp',f.whatsapp.value||'Not given');fd.append('prize',`${p.label}, ${p.sub}`);if(p.terms)fd.append('prize_terms',p.terms);fd.append('code',p.code);fd.append('claim_by',claimDate);
       fetch('https://formsubmit.co/ajax/designifybim@gmail.com',{method:'POST',headers:{'Accept':'application/json'},body:fd}).catch(()=>{});
     }
     ov.querySelector('.spin-go').disabled=true;card.classList.add('spinning');card.scrollTo({top:0,behavior:reduce?'auto':'smooth'});document.activeElement&&document.activeElement.blur();
