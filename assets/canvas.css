@@ -1727,17 +1727,34 @@ body{background:#fff!important;background-image:none!important}
 @media(max-width:1000px){.hero{padding-top:34px!important}}
 
 /* ================================================================
-   Portfolio: picture wall of every design
+   Portfolio: one section per brand, with its colours and designs
    ================================================================ */
-.wall{columns:4 240px;column-gap:16px}
-.wall-item{position:relative;display:block;margin-bottom:16px;border-radius:18px;overflow:hidden;break-inside:avoid;background:#F3ECFF;box-shadow:0 8px 24px rgba(79,35,120,.08)}
-.wall-item img{width:100%;height:auto;display:block;transition:transform .8s var(--ease)}
-.wall-cap{position:absolute;left:10px;right:10px;bottom:10px;display:grid;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.95);box-shadow:0 8px 20px rgba(79,35,120,.15);opacity:0;transform:translateY(10px);transition:opacity .35s,transform .45s var(--spring)}
-.wall-cap b{font-size:14.5px;color:var(--ink);letter-spacing:-.01em}
-.wall-cap small{font-size:12px;color:var(--purple);font-weight:600}
-.wall-item:hover img{transform:scale(1.05)}
-.wall-item:hover .wall-cap,.wall-item:focus-visible .wall-cap{opacity:1;transform:none}
-.wall-item.hide{display:none}
-.wall-item.pop{animation:swapin .5s var(--spring) both}
-@media(hover:none){.wall-cap{opacity:1;transform:none;padding:7px 11px}.wall-cap small{display:none}}
-@media(max-width:600px){.wall{columns:2;column-gap:10px}.wall-item{margin-bottom:10px;border-radius:14px}.wall-cap b{font-size:12.5px}}
+.brands{display:grid;gap:28px}
+.brand-sec{position:relative;display:grid;grid-template-columns:380px 1fr;gap:34px;align-items:center;padding:30px;border-radius:26px;background:#fff;box-shadow:0 0 0 1px var(--line),0 14px 40px rgba(79,35,120,.07);overflow:hidden}
+.brand-sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--acc)}
+.brand-sec.hide{display:none}
+.brand-sec.pop{animation:swapin .5s var(--spring) both}
+.brand-info{padding-left:8px}
+.brand-cat{display:inline-block;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--acc) 14%,#fff);color:color-mix(in srgb,var(--acc) 75%,#000);font-size:12.5px;font-weight:700}
+.brand-info h2{font-size:clamp(28px,2.8vw,38px);letter-spacing:-.04em;margin:12px 0 8px;line-height:1.05}
+.brand-info p{font-size:15px;color:var(--muted)}
+.brand-pal{margin:18px 0 14px}
+.pal-label{display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{position:relative;width:52px;height:52px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);transition:transform .35s var(--spring)}
+.sw small{position:absolute;left:50%;top:calc(100% + 4px);transform:translateX(-50%);font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .2s}
+.sw:hover{transform:translateY(-4px)}
+.sw:hover small{opacity:1}
+.brand-pal{padding-bottom:12px}
+.brand-info .project-tags{justify-content:flex-start;margin-bottom:18px}
+.brand-shots{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.brand-shots.n1{grid-template-columns:minmax(0,320px)}
+.brand-shots.n2{grid-template-columns:repeat(2,minmax(0,300px))}
+.shot{position:relative;display:block;aspect-ratio:4/5;border-radius:16px;overflow:hidden;background:color-mix(in srgb,var(--acc) 10%,#fff)}
+.brand-shots.n1 .shot img,.brand-shots.n2 .shot img{object-fit:contain}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.shot:hover img{transform:scale(1.06)}
+.shot .more{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--acc) 72%,transparent);color:#fff;font-weight:700;font-size:16px}
+@media(max-width:1000px){.brand-sec{grid-template-columns:1fr;gap:22px}.brand-shots{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.brand-sec{padding:22px 18px 22px 24px}.brand-shots,.brand-shots.n2{grid-template-columns:1fr 1fr;gap:8px}.brand-shots.n1{grid-template-columns:1fr}.sw{width:42px;height:42px}}
+.brand-info .project-tags span{background:color-mix(in srgb,var(--acc) 12%,#fff)!important;color:color-mix(in srgb,var(--acc) 70%,#000)!important}
