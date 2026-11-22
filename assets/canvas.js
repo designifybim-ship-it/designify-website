@@ -303,7 +303,7 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
 (()=>{
   const sec=document.querySelector('.chat3d');if(!sec)return;
   const holder=sec.querySelector('.chat3d-phone'),now=sec.querySelector('.chat3d-now b');
-  const pops=[...sec.querySelectorAll('.pop')];
+  const pops=[...sec.querySelectorAll('.chat-pop')];
   // headline: words rise in, then "one text away." types itself
   const a=sec.querySelector('.ct-a');a.innerHTML=a.textContent.split(' ').map((w,i)=>`<span class="w" style="transition-delay:${i*.07}s">${w}</span>`).join(' ');
   const typed=sec.querySelector('.ct-typed'),full=typed.textContent;
