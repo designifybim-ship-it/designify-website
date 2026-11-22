@@ -1957,3 +1957,22 @@ body{background:#fff!important;background-image:none!important}
 .fl-pics.sq .fl-img.p0{left:-10%}.fl-pics.sq .fl-img.p2{right:-12%}
 .flyer:not(.flyer-free) .fl-top{flex-direction:column;align-items:flex-start;gap:12px}
 .flyer-free h2{margin-top:30px}
+/* flyers: light colours */
+.flyer:not(.flyer-free){background:#F4EDFF;color:var(--ink);box-shadow:0 30px 60px rgba(132,32,244,.16)}
+.flyer:not(.flyer-free)::before{background:radial-gradient(circle at 88% 85%,#E6D6FF 0 32%,transparent 32.2%),repeating-linear-gradient(-45deg,rgba(132,32,244,.06) 0 14px,transparent 14px 34px)}
+.fl-text h2{color:var(--ink)}
+.fl-text h2 .l2{color:var(--purple);text-shadow:4px 4px 0 #DCC8FF}
+.fl-text p{color:var(--muted);opacity:1}
+.fl-price{background:var(--purple);color:#fff}
+.fl-price small{color:#fff}
+.fl-foot{background:#E6D6FF;color:var(--ink)}
+.fl-foot i{color:var(--purple)}
+.fl-img{box-shadow:0 22px 44px rgba(79,35,120,.25)}
+.flyer:not(.flyer-free)::before{background:radial-gradient(circle 260px at 85% 80%,#E6D6FF 99%,transparent 100%),repeating-linear-gradient(-45deg,rgba(132,32,244,.06) 0 14px,transparent 14px 34px)}
+.flyer-free::before{background:radial-gradient(circle 240px at 100% 0,#E4D3FF 99%,transparent 100%),repeating-linear-gradient(-45deg,rgba(132,32,244,.06) 0 14px,transparent 14px 34px)}
+.flyer::before{animation:none!important}
+.flyer:not(.flyer-free)::before{background:radial-gradient(circle 260px at 85% 80%,#E6D6FF 99%,transparent 100%)}
+.flyer-free::before{background:radial-gradient(circle 240px at 100% 0,#E4D3FF 99%,transparent 100%)}
+.fl-tag{color:#fff}
+.flyer-free .fl-free-body{justify-content:center}
+.flyer-free h2{margin-top:10px}
