@@ -1806,3 +1806,33 @@ body{background:#fff!important;background-image:none!important}
 .hero2 .hero-grid{grid-template-columns:1.18fr .82fr}
 .hero2 h1{font-size:clamp(44px,5vw,70px)!important}
 .h2-proof .stars{color:#F5A524;letter-spacing:2px}
+
+/* ================================================================
+   Homepage top: centred headline, designs fanned out underneath
+   ================================================================ */
+@property --rr{syntax:'<angle>';inherits:false;initial-value:0deg}
+.hero-fan{padding:56px 0 0!important;overflow:hidden;text-align:center}
+.hf-in{display:flex;flex-direction:column;align-items:center}
+.hero-fan .status{margin:0 0 24px!important}
+.hero-fan h1{font-size:clamp(44px,6.2vw,88px)!important;line-height:1.02!important;letter-spacing:-.045em;text-align:center;max-width:1000px}
+.hero-fan h1 .line{display:block}
+.hero-fan .rotating-word{color:var(--purple);text-align:center}
+.hero-fan .lead{margin:22px auto 0;max-width:620px;text-align:center}
+.hero-fan .hero-actions{justify-content:center;margin-top:30px}
+.hf-fan{position:relative;height:470px;margin-top:46px}
+.fc{position:absolute;left:50%;top:30px;width:290px;margin-left:-145px;aspect-ratio:4/5;transform-origin:50% 1250px;rotate:var(--rr);animation:fanOut 1.3s cubic-bezier(.34,1.4,.64,1) both;animation-delay:calc(.35s + var(--i)*.09s);z-index:1}
+.fc:nth-child(4){z-index:3}.fc:nth-child(3),.fc:nth-child(5){z-index:2}
+.fc img{width:100%;height:100%;object-fit:cover;border:0;border-radius:22px;box-shadow:0 24px 50px rgba(79,35,120,.22);animation:fcFloat 5s ease-in-out infinite;animation-delay:calc(var(--i)*-.7s);transition:scale .45s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
+.fc:hover{z-index:10}
+.fc:hover img{scale:1.1;box-shadow:0 34px 70px rgba(79,35,120,.32)}
+@keyframes fanOut{from{--rr:0deg;opacity:0;translate:0 120px}to{--rr:var(--r);opacity:1;translate:0 0}}
+@keyframes fcFloat{50%{translate:0 -14px}}
+@media(max-width:1000px){.hf-fan{height:400px}.fc{width:230px;margin-left:-115px;transform-origin:50% 1000px}}
+@media(max-width:600px){
+  .hero-fan{padding-top:30px!important}
+  .hf-fan{height:300px;margin-top:34px}
+  .fc{width:160px;margin-left:-80px;top:20px;transform-origin:50% 700px}
+  .fc img{border-radius:14px}
+}
+@media(prefers-reduced-motion:reduce){.fc{animation:none;--rr:var(--r)}.fc img{animation:none}}
+@media(min-width:1001px){.hf-fan{height:540px}}
