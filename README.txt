@@ -4,7 +4,7 @@ Open index.html to start.
 
 Pages are separate HTML files: Home, About, Services, Pricing, Packages, Portfolio, Reviews, Contact and Policies. Each portfolio business also has its own page inside /projects. 404.html is shown for any broken or missing link.
 
-IMPORTANT: Keep the entire folder together. The HTML pages use the /assets folder for logos, CSS, JavaScript and portfolio images. The site's styles are in assets/studio.css and its animations in assets/canvas.js. (assets/canvas.css and assets/site.css are old stylesheets no page uses any more; they can be deleted.)
+IMPORTANT: Keep the entire folder together. The HTML pages use the /assets folder for logos, CSS, JavaScript and portfolio images. The site's styles are in assets/canvas.css and its animations in assets/canvas.js.
 
 
 EASY EDITS (all in assets/site.js, at the very top)
@@ -24,6 +24,6 @@ Free checklist: assets/designify-brand-checklist.pdf is offered to people who jo
 
 Share image: assets/images/designify-share.jpg is the picture shown when the site is shared on WhatsApp, Instagram or Facebook.
 
-404 page: 404.html uses <base href="/"> so its links work from any address on designifybim.com.
+404 page: 404.html uses <base href="/designify-website/"> so its links work from any address. If the site moves to its own domain, change that to <base href="/">.
 
-Photo: assets/images/ariel-profile.png is the cut-out portrait used on the homepage and About page. Replace it with another transparent PNG to change it.
+Photo: the About page and the homepage "Hi, I'm Ariel" section show a "Photo coming soon" placeholder until a photo is added.
