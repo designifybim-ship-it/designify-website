@@ -1999,3 +1999,64 @@ body{background-image:radial-gradient(rgba(157,44,255,.09) 1px,transparent 1.2px
 .chat3d-phone model-viewer::part(default-progress-mask){display:none}
 /* buzz pulse: a soft glow instead of a thin ring line */
 .chat3d-phone::after{border:0;background:radial-gradient(circle,rgba(210,28,242,.28),rgba(157,44,255,.12) 45%,transparent 70%)}
+
+/* ================================================================
+   Spin the wheel giveaway
+   ================================================================ */
+.spin-tab{position:fixed;left:18px;bottom:22px;z-index:1200;display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border:0;border-radius:999px;background:var(--grad);color:#fff;font-weight:700;font-size:14.5px;cursor:pointer;box-shadow:0 12px 30px rgba(157,44,255,.38);transition:transform .35s var(--spring),box-shadow .3s}
+.spin-tab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 18px 38px rgba(157,44,255,.45)}
+.spin-tab-ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--purple);font-size:16px}
+.spin-tab.wiggle .spin-tab-ic{animation:tabWiggle 2.6s ease-in-out infinite}
+@keyframes tabWiggle{0%,70%,100%{rotate:0deg}75%{rotate:-18deg}80%{rotate:16deg}85%{rotate:-12deg}90%{rotate:8deg}95%{rotate:-4deg}}
+@media(max-width:600px){.spin-tab{left:14px;bottom:14px;padding:6px 14px 6px 6px;font-size:13px}.spin-tab-ic{width:34px;height:34px;font-size:14px}}
+.spin-ov{position:fixed;inset:0;z-index:6000;display:grid;place-items:center;padding:16px;background:rgba(32,10,58,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .3s}
+.spin-ov.on{opacity:1}
+.spin-card{position:relative;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px;width:min(920px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:36px;border-radius:28px;background:#fff;box-shadow:0 40px 100px rgba(40,0,90,.35);scale:.92;transition:scale .45s var(--spring)}
+.spin-ov.on .spin-card{scale:1}
+.spin-x{position:absolute;top:14px;right:14px;width:40px;height:40px;border:0;border-radius:50%;background:var(--lav);color:var(--ink);font-size:16px;cursor:pointer;z-index:2}
+.spin-x:hover{background:var(--purple);color:#fff}
+.spin-wheel{position:relative;aspect-ratio:1;max-width:400px;width:100%;margin:0 auto}
+.sw-svg{width:100%;height:100%;filter:drop-shadow(0 20px 40px rgba(157,44,255,.3))}
+.sw-rim{fill:#fff;stroke:#F1E6FF;stroke-width:4}
+.sw-rot{transform-origin:160px 160px;transform-box:view-box}
+.sw-l{fill:#fff;font:700 16px Poppins,sans-serif;letter-spacing:-.01em}
+.sw-dot{fill:#F2C6FF}
+.spinning .sw-dot{animation:bulbs .3s steps(2) infinite}
+.sw-dot:nth-of-type(odd){animation-delay:.15s}
+@keyframes bulbs{50%{fill:#fff}}
+.sw-hub{fill:#fff;stroke:#EADCFF;stroke-width:4}
+.sw-hub-t{fill:var(--purple);font:800 15px Poppins,sans-serif}
+.sw-ptr{position:absolute;left:50%;top:-6px;z-index:2;width:0;height:0;margin-left:-16px;border-left:16px solid transparent;border-right:16px solid transparent;border-top:30px solid #26232B;filter:drop-shadow(0 4px 6px rgba(0,0,0,.25));transform-origin:50% 0}
+.spinning .sw-ptr{animation:tick .12s ease-in-out infinite alternate}
+@keyframes tick{to{rotate:-12deg}}
+.spin-confetti{position:absolute;left:50%;top:50%;pointer-events:none}
+.spin-confetti i{position:absolute;width:9px;height:14px;border-radius:2px;animation:conf 1.9s cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes conf{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--x),calc(var(--y) + 160px)) rotate(var(--r));opacity:0}}
+.spin-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--lav);color:var(--purple);font-size:13px;font-weight:700}
+.spin-side h2{font-size:clamp(28px,3.4vw,40px);line-height:1.1;letter-spacing:-.03em;margin:14px 0 10px}
+.spin-form p{color:var(--muted);font-size:15px;margin-bottom:16px}
+.spin-f{display:grid;gap:6px;margin-bottom:12px;font-size:14px;font-weight:600}
+.spin-f em{font-style:normal;font-weight:500;color:var(--muted)}
+.spin-f input{width:100%;padding:13px 16px;border:0;border-radius:12px;background:#FBF9FD;box-shadow:inset 0 0 0 1.5px var(--line);font-size:16px;outline:none}
+.spin-f input:focus{background:#fff;box-shadow:inset 0 0 0 2px var(--purple),0 0 0 4px rgba(157,44,255,.12)}
+.spin-ok{display:flex;gap:10px;align-items:flex-start;margin:4px 0 16px;font-size:13px;color:var(--muted)}
+.spin-ok input{margin-top:3px;accent-color:var(--purple)}
+.spin-go{width:100%}
+.spin-go i{transition:rotate .6s var(--spring)}.spin-go:hover i{rotate:180deg}
+.spin-terms,.spin-res small{display:block;margin-top:12px;font-size:12px;color:var(--muted);line-height:1.5}
+.spin-won{display:inline-block;padding:5px 12px;border-radius:999px;background:var(--grad);color:#fff;font-weight:700;font-size:13px}
+.spin-res h3{font-size:clamp(34px,4vw,48px);letter-spacing:-.04em;margin:10px 0 2px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.spin-res p{color:var(--ink);font-weight:500}
+.spin-code{display:flex;align-items:center;justify-content:space-between;margin:16px 0 4px;padding:14px 18px;border-radius:14px;border:2px dashed #E2CCFA;background:#FBF7FF}
+.spin-code span{font-size:13px;color:var(--muted)}.spin-code b{font-size:22px;letter-spacing:.08em;color:var(--purple)}
+.spin-res .hero-actions{margin-top:16px}
+.spin-prev{color:var(--purple)!important}
+.won .spin-res{animation:swapin .6s var(--spring) both}
+@media(max-width:760px){
+  .spin-card{grid-template-columns:1fr;gap:14px;padding:26px 20px 22px;border-radius:24px}
+  .spin-wheel{max-width:250px}
+  .spin-side h2{font-size:26px;margin-top:10px}
+  .spin-side{text-align:left}
+}
+@media(prefers-reduced-motion:reduce){.spin-tab.wiggle .spin-tab-ic,.spinning .sw-dot,.spinning .sw-ptr{animation:none}}
+.sw-gold{fill:#3B1A00}

@@ -23,6 +23,28 @@ const DESIGNIFY_PROMO={
   terms:'Ends December 31, 2026. One-off projects only; not valid on monthly packages or combined with other offers.',
   button:'Claim 15% Off'
 };
+// SPIN THE WHEEL GIVEAWAY: a "Spin to win" button shows on every page from startDate to endDate.
+// Visitors enter their email to spin once; you get an email with their details and prize.
+// Change prizes, codes or odds below (a higher weight wins more often). 'wheel' is an optional shorter label
+// for the wheel itself. Preview any time by adding ?spin=preview to any page address.
+const DESIGNIFY_SPIN={
+  enabled:true,
+  startDate:'2027-01-01',
+  endDate:'2027-01-31',
+  claimBy:'2027-02-28',
+  title:'New Year Spin',
+  prizes:[
+    {label:'10% off',sub:'any one-off design',code:'SPIN10',weight:16},
+    {label:'Free checklist',wheel:'Checklist',sub:'5 Things Every Brand Needs',code:'SPINLIST',weight:20},
+    {label:'Free revision',sub:'one extra round on your project',code:'SPINREV',weight:16},
+    {label:'15% off',sub:'your first month of a package',code:'SPIN15',weight:12},
+    {label:'10% off',sub:'any one-off design',code:'SPIN10',weight:14},
+    {label:'Free post',sub:'a social post with any flyer order',code:'SPINPOST',weight:10},
+    {label:'Free rush',sub:'rush delivery on your next order',code:'SPINRUSH',weight:10},
+    {label:'25% off',wheel:'★ 25% off',sub:'any one-off project (grand prize)',code:'SPIN25',weight:2,grand:true}
+  ],
+  terms:'One spin per person. One prize per business, on projects booked by the claim date. Not exchangeable for cash or combined with other offers.'
+};
 document.querySelectorAll('[data-booking-months]').forEach(el=>{el.textContent=DESIGNIFY_BOOKING_MONTHS});
 
 document.querySelectorAll('[data-social]').forEach(a=>{const u=DESIGNIFY_LINKS[a.dataset.social];if(u){a.href=u;a.target='_blank';a.rel='noopener'}else{a.hidden=true}});
