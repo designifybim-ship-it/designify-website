@@ -1912,3 +1912,65 @@ body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px
 /* process path: the glowing dot slides behind the step icons and fades out at the end */
 .steps.path .path-head{z-index:0;transition:left .2s linear,top .2s linear,opacity .6s}
 .steps.path.done .path-head{opacity:0}
+
+/* ================================================================
+   Homepage: 3D phone with a Designify chat playing on the screen
+   ================================================================ */
+.chat3d{position:relative;overflow:hidden;padding:80px 0;background:linear-gradient(180deg,#fff 0%,#FAF5FF 45%,#fff 100%)}
+.chat3d::before,.chat3d::after{content:"";position:absolute;z-index:0;border-radius:50%;pointer-events:none}
+.chat3d::before{width:780px;height:180px;left:-160px;top:22%;background:linear-gradient(90deg,rgba(156,59,236,.0),rgba(156,59,236,.28),rgba(177,24,215,.22),rgba(127,120,230,0));transform:rotate(-24deg);filter:blur(2px);border-radius:120px;animation:ribbon 14s ease-in-out infinite}
+.chat3d::after{width:620px;height:140px;right:-180px;bottom:12%;background:linear-gradient(90deg,rgba(127,120,230,0),rgba(127,120,230,.25),rgba(177,24,215,.22),rgba(156,59,236,0));transform:rotate(-30deg);border-radius:120px;animation:ribbon 16s ease-in-out infinite reverse}
+@keyframes ribbon{50%{translate:30px -20px}}
+.chat3d-in{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px}
+.chat3d-title{font-size:clamp(34px,4.6vw,64px);line-height:1.08;letter-spacing:-.035em}
+.chat3d-title .ct-a{display:block;font-weight:500;color:var(--ink)}
+.chat3d-title .ct-a .w{display:inline-block;opacity:0;translate:0 .4em;transition:opacity .5s var(--ease),translate .6s var(--spring)}
+.chat3d.in .chat3d-title .ct-a .w{opacity:1;translate:0 0}
+.chat3d-title .ct-b{display:inline-block;white-space:nowrap;font-weight:800}
+.ct-caret{display:inline-block;width:4px;height:.86em;margin-left:6px;vertical-align:-.08em;border-radius:2px;background:var(--grad);animation:caret 1s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.chat3d .sec-intro{margin-top:18px;max-width:46ch}
+.chat3d-now{display:inline-flex;align-items:center;gap:8px;margin:18px 0 24px;padding:8px 14px;border-radius:999px;background:#fff;box-shadow:0 0 0 1px var(--line),0 8px 20px rgba(156,59,236,.08);font-size:14px;color:var(--muted)}
+.chat3d-now b{color:var(--ink);transition:opacity .3s}
+.chat3d-now .dot{width:8px;height:8px;border-radius:50%;background:#1DB954;animation:ping 2s infinite}
+.chat3d-stage{position:relative;height:640px}
+.chat3d-glow{position:absolute;left:50%;top:50%;width:440px;height:440px;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(177,24,215,.22),rgba(156,59,236,.10) 45%,transparent 70%);animation:glowPulse 5s ease-in-out infinite}
+@keyframes glowPulse{50%{scale:1.12;opacity:.8}}
+.chat3d-phone{position:absolute;inset:0;animation:phoneFloat 6s ease-in-out infinite}
+@keyframes phoneFloat{50%{translate:0 -12px}}
+.chat3d-phone model-viewer{width:100%;height:100%;--poster-color:transparent;background:transparent;outline:none}
+.chat3d-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .6s}
+.chat3d-phone.ready .chat3d-poster{opacity:0;pointer-events:none}
+.pop{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:16px;background:#fff;box-shadow:0 14px 34px rgba(79,35,120,.16);font-size:14px;font-weight:600;white-space:nowrap;opacity:0;scale:.6;transition:opacity .35s,scale .5s var(--spring);pointer-events:none}
+.pop i{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--grad);color:#fff;font-size:12px}
+.pop.show{opacity:1;scale:1}
+.pop-1{left:4%;top:20%;border-bottom-left-radius:4px}
+.pop-2{right:2%;top:44%;border-bottom-right-radius:4px}
+.pop-3{left:8%;bottom:16%;border-bottom-left-radius:4px}
+.chat3d-hint{position:absolute;left:50%;bottom:4px;translate:-50% 0;font-size:12.5px;font-weight:600;color:var(--muted);opacity:.8}
+.chat3d-hint i{color:var(--purple);margin-right:4px}
+@media(max-width:900px){
+  .chat3d{padding:56px 0}
+  .chat3d-in{grid-template-columns:1fr;gap:10px;text-align:center}
+  .chat3d .sec-intro{margin-left:auto;margin-right:auto}
+  .chat3d-copy .hero-actions{justify-content:center}
+  .chat3d-stage{height:520px}
+  .pop{font-size:12.5px;padding:8px 12px}.pop i{width:24px;height:24px}
+  .pop-1{left:0;top:12%}.pop-2{right:0;top:46%}.pop-3{left:2%;bottom:14%}
+}
+@media(max-width:420px){.chat3d-title .ct-b{white-space:normal}.chat3d-stage{height:460px}}
+@media(prefers-reduced-motion:reduce){.chat3d::before,.chat3d::after,.chat3d-glow,.chat3d-phone,.ct-caret{animation:none}}
+.chat3d-in{grid-template-columns:1.1fr .9fr}
+.chat3d-title{font-size:clamp(32px,4vw,56px)}
+.chat3d-title .ct-a{white-space:nowrap}
+@media(max-width:900px){.chat3d-in{grid-template-columns:1fr}}
+@media(max-width:420px){.chat3d-title .ct-a{white-space:normal}}
+.chat3d-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;margin:22px 0 4px;max-width:520px}
+.chat3d-list li{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;color:var(--ink);opacity:0;translate:0 12px;transition:opacity .5s var(--ease),translate .6s var(--spring)}
+.chat3d.in .chat3d-list li{opacity:1;translate:0 0}
+.chat3d.in .chat3d-list li:nth-child(2){transition-delay:.1s}.chat3d.in .chat3d-list li:nth-child(3){transition-delay:.2s}.chat3d.in .chat3d-list li:nth-child(4){transition-delay:.3s}
+.chat3d-list .ci{flex:0 0 42px;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--grad);color:#fff;font-size:16px;box-shadow:0 8px 18px rgba(156,59,236,.25);transition:transform .4s var(--spring)}
+.chat3d-list li:hover .ci{transform:rotate(-8deg) scale(1.08)}
+@media(max-width:900px){.chat3d-list{margin:20px auto 4px;text-align:left}}
+@media(max-width:420px){.chat3d-list{grid-template-columns:1fr;max-width:280px}}
+@media(prefers-reduced-motion:reduce){.chat3d-list li{opacity:1;translate:none}}

@@ -298,4 +298,44 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   const mode=()=>{if(vertical.matches)follow();else if(played)set(1)};
   vertical.addEventListener?vertical.addEventListener('change',mode):vertical.addListener(mode);follow();
 })();
+
+// ---------- Homepage: 3D phone with a chat that plays on the screen ----------
+(()=>{
+  const sec=document.querySelector('.chat3d');if(!sec)return;
+  const holder=sec.querySelector('.chat3d-phone'),now=sec.querySelector('.chat3d-now b');
+  const pops=[...sec.querySelectorAll('.pop')];
+  // headline: words rise in, then "one text away." types itself
+  const a=sec.querySelector('.ct-a');a.innerHTML=a.textContent.split(' ').map((w,i)=>`<span class="w" style="transition-delay:${i*.07}s">${w}</span>`).join(' ');
+  const typed=sec.querySelector('.ct-typed'),full=typed.textContent;
+  const type=()=>{if(reduce)return;let i=0;typed.textContent='';const t=setInterval(()=>{typed.textContent=full.slice(0,++i);if(i>=full.length)clearInterval(t)},70)};
+  // the chat: each project has 4 screens (ask, typing, design sent, reaction)
+  const chats=[['epic-eats','Epic Eats flyer'],['social','Social media management'],['tre-hair','TRE Hair price list'],['website','Website updates'],['crumbles-cookies','Crumbles & Cookies launch']];
+  const frames=[];chats.forEach(([slug,name])=>[0,1,2,3].forEach(k=>frames.push({src:`/assets/3d/chat/chat-${slug}-${k}.jpg`,name,k})));
+  const hold=[1300,1100,2300,2600];
+  const pop=k=>{const el=pops[{0:0,2:2,3:1}[k]];if(!el)return;pops.forEach(p=>p.classList.remove('show'));el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)};
+  let started=false,visible=false;
+  const start=()=>{if(started)return;started=true;type();
+    window.ModelViewerElement=Object.assign(window.ModelViewerElement||{},{meshoptDecoderLocation:'/assets/vendor/meshopt_decoder.js'});
+    const s=document.createElement('script');s.type='module';s.src='/assets/vendor/model-viewer.min.js';document.head.appendChild(s);
+    const mv=document.createElement('model-viewer');
+    Object.entries({src:holder.dataset.model,'camera-controls':'','disable-zoom':'','disable-pan':'','interaction-prompt':'none','camera-orbit':'-14deg 84deg auto','min-camera-orbit':'auto 60deg auto','max-camera-orbit':'auto 110deg auto','field-of-view':'24deg','shadow-intensity':'0.9','shadow-softness':'1','exposure':'1.05','tone-mapping':'neutral','environment-image':'neutral','loading':'eager',alt:holder.getAttribute('aria-label')}).forEach(([k,v])=>mv.setAttribute(k,v));
+    holder.appendChild(mv);
+    mv.addEventListener('load',async()=>{
+      const mat=mv.model.materials.find(m=>m.name==='COLOUR_Silver_Screen');if(!mat)return;
+      const tex=await Promise.all(frames.map(f=>mv.createTexture(f.src)));
+      mat.setEmissiveFactor([1,1,1]);
+      let i=0;const show=()=>{const f=frames[i];mat.emissiveTexture.setTexture(tex[i]);
+        if(now&&now.textContent!==f.name){now.style.opacity=0;setTimeout(()=>{now.textContent=f.name;now.style.opacity=1},250)}
+        pop(f.k)};
+      show();holder.classList.add('ready');
+      const loop=()=>{setTimeout(()=>{if(visible&&!reduce){i=(i+1)%frames.length;show()}loop()},hold[frames[i].k])};loop();
+      // gentle sway; pauses while someone spins the phone
+      let user=false,idle=0,t0=performance.now();
+      mv.addEventListener('pointerdown',()=>{user=true;clearTimeout(idle)});
+      addEventListener('pointerup',()=>{if(user){idle=setTimeout(()=>user=false,2500)}});
+      const sway=now=>{if(!user&&visible&&!reduce){const t=(now-t0)/1000;mv.cameraOrbit=`${-14+16*Math.sin(t*.6)}deg ${84+3*Math.sin(t*.45)}deg auto`}requestAnimationFrame(sway)};requestAnimationFrame(sway);
+    });
+  };
+  new IntersectionObserver(es=>es.forEach(e=>{visible=e.isIntersecting;if(e.isIntersecting){sec.classList.add('in');start()}}),{rootMargin:'200px 0px'}).observe(sec);
+})();
 })();
