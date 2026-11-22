@@ -1843,3 +1843,25 @@ body{background:#fff!important;background-image:none!important}
 .hero-fan::before{background-image:radial-gradient(rgba(132,32,244,.34) 1.6px,transparent 1.9px)}
 .hero-fan{padding-top:80px!important}
 @media(max-width:600px){.hero-fan{padding-top:44px!important}}
+
+/* ================================================================
+   Call-to-action boxes: polish (same layout as before)
+   ================================================================ */
+.cta-block{border-radius:30px!important;overflow:hidden;box-shadow:0 30px 70px rgba(132,32,244,.18)!important;transition:transform .5s var(--spring),box-shadow .4s}
+.cta-block:hover{transform:translateY(-4px);box-shadow:0 40px 80px rgba(132,32,244,.24)!important}
+.cta-main{position:relative;isolation:isolate;background:var(--purple)!important}
+.cta-main::before{content:"";position:absolute;inset:0;z-index:-1;background-image:radial-gradient(rgba(255,255,255,.18) 1.5px,transparent 1.8px);background-size:22px 22px;animation:ctaDots 20s linear infinite;-webkit-mask-image:linear-gradient(110deg,transparent 15%,#000 70%);mask-image:linear-gradient(110deg,transparent 15%,#000 70%)}
+@keyframes ctaDots{to{background-position:220px 110px}}
+.cta-main .shape{border:0!important;border-radius:50%!important;background:rgba(255,255,255,.08)!important;transform:none!important;z-index:-1}
+.cta-main .shape.s1{width:340px!important;height:340px!important;right:-110px!important;top:-120px!important;left:auto!important;bottom:auto!important;animation:ctaFloat 9s ease-in-out infinite}
+.cta-main .shape.s2{width:170px!important;height:170px!important;right:22%!important;bottom:-80px!important;left:auto!important;top:auto!important;background:rgba(255,255,255,.06)!important;animation:ctaFloat 7s ease-in-out infinite reverse}
+@keyframes ctaFloat{50%{transform:translate(-14px,14px) scale(1.06)!important}}
+.cta-main h2{letter-spacing:-.045em}
+.cta-main .btn-white{box-shadow:0 12px 28px rgba(40,0,90,.25)}
+.cta-main .btn-glass{background:rgba(255,255,255,.12)!important;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45)!important}
+.cta-side{background:#F8F4FF!important}
+.cta-side .freebie{background:#fff!important;box-shadow:0 4px 12px rgba(132,32,244,.12)}
+.cta-side .newsletter-form input[type=email]{border:0!important;border-radius:14px!important;background:#fff!important;box-shadow:inset 0 0 0 1.5px #E2D4FA!important;transition:box-shadow .25s}
+.cta-side .newsletter-form input[type=email]:focus{box-shadow:inset 0 0 0 2px var(--purple),0 0 0 4px rgba(132,32,244,.12)!important}
+.cta-side .newsletter-form .btn{border-radius:14px!important}
+@media(prefers-reduced-motion:reduce){.cta-main::before,.cta-main .shape{animation:none}}
