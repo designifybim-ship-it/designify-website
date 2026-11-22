@@ -319,16 +319,20 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
     const s=document.createElement('script');s.type='module';s.src='/assets/vendor/model-viewer.min.js';document.head.appendChild(s);
     const mv=document.createElement('model-viewer');
     Object.entries({src:holder.dataset.model,'camera-controls':'','disable-zoom':'','disable-pan':'','interaction-prompt':'none','camera-orbit':'-14deg 84deg auto','min-camera-orbit':'auto 60deg auto','max-camera-orbit':'auto 110deg auto','field-of-view':'24deg','shadow-intensity':'0.9','shadow-softness':'1','exposure':'1.05','tone-mapping':'neutral','environment-image':'neutral','loading':'eager',alt:holder.getAttribute('aria-label')}).forEach(([k,v])=>mv.setAttribute(k,v));
+    const bar=document.createElement('div');bar.slot='progress-bar';mv.appendChild(bar);
     holder.appendChild(mv);
     mv.addEventListener('load',async()=>{
       const mat=mv.model.materials.find(m=>m.name==='COLOUR_Silver_Screen');if(!mat)return;
-      const tex=await Promise.all(frames.map(f=>mv.createTexture(f.src)));
+      // screens load a conversation at a time (the next one is fetched while the current one plays)
+      const tex=[],get=k=>tex[k]||(tex[k]=mv.createTexture(frames[k].src));
+      const preload=k=>{const c=Math.floor(k/4)*4;for(let j=c;j<c+8&&j<frames.length+4;j++)get(j%frames.length)};
+      await Promise.all([0,1,2,3].map(get));preload(0);
       mat.setEmissiveFactor([1,1,1]);
-      let i=0;const show=()=>{const f=frames[i];mat.emissiveTexture.setTexture(tex[i]);
+      let i=0,shown=0;const show=async()=>{const f=frames[i];preload(i);mat.emissiveTexture.setTexture(await get(i));
         if(now&&now.textContent!==f.name){now.style.opacity=0;setTimeout(()=>{now.textContent=f.name;now.style.opacity=1},250)}
         pop(f.k);
         // incoming message: the phone buzzes; a new conversation: it does a quick spin
-        if(!reduce&&(f.k===0||f.k===3)){holder.classList.remove('buzz');void holder.offsetWidth;holder.classList.add('buzz')}
+        if(!reduce&&shown++&&(f.k===0||f.k===3)){holder.classList.remove('buzz');void holder.offsetWidth;holder.classList.add('buzz')}
         if(!reduce&&f.k===0&&i>0)spinAt=performance.now()};
       show();holder.classList.add('ready');
       const loop=()=>{setTimeout(()=>{if(visible&&!reduce){i=(i+1)%frames.length;show()}loop()},hold[frames[i].k])};loop();
