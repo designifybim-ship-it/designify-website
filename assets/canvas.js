@@ -313,7 +313,7 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   const frames=[];chats.forEach(([slug,name])=>[0,1,2,3].forEach(k=>frames.push({src:`/assets/3d/chat/chat-${slug}-${k}.jpg`,name,k})));
   const hold=[1300,1100,2300,2600];
   const pop=k=>{const el=pops[{0:0,2:2,3:1}[k]];if(!el)return;pops.forEach(p=>p.classList.remove('show'));el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)};
-  let started=false,visible=false;
+  let started=false,visible=false,spinAt=0;
   const start=()=>{if(started)return;started=true;type();
     window.ModelViewerElement=Object.assign(window.ModelViewerElement||{},{meshoptDecoderLocation:'/assets/vendor/meshopt_decoder.js'});
     const s=document.createElement('script');s.type='module';s.src='/assets/vendor/model-viewer.min.js';document.head.appendChild(s);
@@ -326,14 +326,17 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
       mat.setEmissiveFactor([1,1,1]);
       let i=0;const show=()=>{const f=frames[i];mat.emissiveTexture.setTexture(tex[i]);
         if(now&&now.textContent!==f.name){now.style.opacity=0;setTimeout(()=>{now.textContent=f.name;now.style.opacity=1},250)}
-        pop(f.k)};
+        pop(f.k);
+        // incoming message: the phone buzzes; a new conversation: it does a quick spin
+        if(!reduce&&(f.k===0||f.k===3)){holder.classList.remove('buzz');void holder.offsetWidth;holder.classList.add('buzz')}
+        if(!reduce&&f.k===0&&i>0)spinAt=performance.now()};
       show();holder.classList.add('ready');
       const loop=()=>{setTimeout(()=>{if(visible&&!reduce){i=(i+1)%frames.length;show()}loop()},hold[frames[i].k])};loop();
       // gentle sway; pauses while someone spins the phone
       let user=false,idle=0,t0=performance.now();
       mv.addEventListener('pointerdown',()=>{user=true;clearTimeout(idle)});
       addEventListener('pointerup',()=>{if(user){idle=setTimeout(()=>user=false,2500)}});
-      const sway=now=>{if(!user&&visible&&!reduce){const t=(now-t0)/1000;mv.cameraOrbit=`${-14+16*Math.sin(t*.6)}deg ${84+3*Math.sin(t*.45)}deg auto`}requestAnimationFrame(sway)};requestAnimationFrame(sway);
+      const sway=now=>{if(!user&&visible&&!reduce){const t=(now-t0)/1000;let spin=0;if(spinAt){const u=Math.min(1,(now-spinAt)/900);spin=360*(1-Math.pow(1-u,3));if(u>=1)spinAt=0}mv.cameraOrbit=`${-14+16*Math.sin(t*.6)+spin}deg ${84+3*Math.sin(t*.45)}deg auto`;if(spin)mv.jumpCameraToGoal()}requestAnimationFrame(sway)};requestAnimationFrame(sway);
     });
   };
   new IntersectionObserver(es=>es.forEach(e=>{visible=e.isIntersecting;if(e.isIntersecting){sec.classList.add('in');start()}}),{rootMargin:'200px 0px'}).observe(sec);
