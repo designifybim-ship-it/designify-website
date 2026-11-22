@@ -1883,3 +1883,29 @@ body{background:#fff!important;background-image:none!important}
 .btn-primary:hover{background-position:100% 0}
 /* a faint wash of the logo colours behind the page */
 body{background-image:radial-gradient(rgba(156,59,236,.09) 1px,transparent 1.2px),radial-gradient(60% 45% at 100% 0%,rgba(177,24,215,.07),transparent 70%),radial-gradient(55% 40% at 0% 35%,rgba(102,123,226,.06),transparent 70%);background-size:28px 28px,100% 100%,100% 100%}
+
+/* Logo gradient: a little more noticeable, still softer than before */
+:root{
+  --grad:linear-gradient(110deg,#9C3BEC 0%,#B118D7 52%,#7F78E6 100%);
+  --grad-deep:linear-gradient(120deg,#8A2FE6 0%,#9C3BEC 35%,#B118D7 70%,#7476E2 100%);
+}
+
+/* ================================================================
+   Services: process path that lights up as you scroll
+   ================================================================ */
+.steps.path::after{transform:scaleX(var(--p,0));transition:transform .2s linear}
+.steps.path .path-head{position:absolute;z-index:2;left:calc(5% + 90% * var(--p,0));top:31px;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(242,198,255,.35),0 0 22px 6px rgba(242,198,255,.7);opacity:calc(var(--p,0) * 20);transition:left .2s linear,top .2s linear;pointer-events:none}
+.steps.path .step{opacity:.42;transition:opacity .5s var(--ease)}
+.steps.path .step.lit{opacity:1}
+.band-purple .steps.path .step-dot{background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);transform:scale(.86)}
+.band-purple .steps.path .step.lit .step-dot{background:#fff;color:var(--purple);box-shadow:0 0 0 7px rgba(242,198,255,.22),0 12px 28px rgba(40,0,90,.3);transform:scale(1);animation:stepPop .7s var(--spring)}
+.steps.path .step.lit .step-dot i{animation:stepIcon .7s var(--spring)}
+@keyframes stepPop{0%{transform:scale(.86)}55%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes stepIcon{0%{transform:rotate(-20deg) scale(.7)}100%{transform:none}}
+@media(max-width:900px){
+  .steps.path::after{transform:scaleY(var(--p,0))}
+  .steps.path .path-head{left:35.5px;top:calc(20px + (100% - 40px) * var(--p,0))}
+}
+@media(prefers-reduced-motion:reduce){.steps.path .path-head{display:none}}
+/* purple sections keep their soft logo gradient (the pattern switch-off above removed it) */
+.band-purple,.band-purple[class*="bg-"]{background-image:var(--grad-deep)!important;background-size:100% 100%!important;background-repeat:no-repeat!important}

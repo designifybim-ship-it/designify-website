@@ -275,4 +275,22 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   const start=()=>{clearInterval(timer);items.forEach(el=>el.classList.remove('on'));if(mq.matches){i=items.length-1;step();if(!reduce)timer=setInterval(step,3500)}};
   mq.addEventListener?mq.addEventListener('change',start):mq.addListener(start);start();
 })();
+
+// ---------- Services: the process path fills and each step lights up as you scroll ----------
+(()=>{
+  const s=document.querySelector('#process .steps');if(!s)return;
+  s.classList.add('path');
+  const head=document.createElement('span');head.className='path-head';head.setAttribute('aria-hidden','true');s.appendChild(head);
+  const steps=[...s.querySelectorAll('.step')],n=steps.length;
+  if(reduce){s.style.setProperty('--p',1);steps.forEach(x=>x.classList.add('lit'));return}
+  let raf=0;
+  const update=()=>{raf=0;
+    const r=s.getBoundingClientRect(),vh=innerHeight;
+    const p=Math.min(1,Math.max(0,(vh*.85-r.top)/(r.height+vh*.4)));
+    s.style.setProperty('--p',p.toFixed(3));
+    steps.forEach((x,k)=>x.classList.toggle('lit',p>0&&p>=k/(n-1)-.02));
+  };
+  addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(update)},{passive:true});
+  addEventListener('resize',update);update();
+})();
 })();
