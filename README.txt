@@ -16,6 +16,8 @@ Booking months: change DESIGNIFY_BOOKING_MONTHS (for example 'January & February
 Holiday special: the DESIGNIFY_PROMO block controls the 15% offer card that slides in once per visitor, and the offer line on the homepage holiday card. It switches itself off after endDate. Set enabled:false to turn it off early, or change the wording and give it a new code for a new offer (a new code shows the card again to returning visitors). Claims arrive in the Contact form with the offer noted.
 
 
+Spin the wheel: the DESIGNIFY_SPIN block controls the "Spin to win" giveaway. It switches on by itself on startDate (January 1, 2027) and off after endDate; prizes must be claimed by claimBy. Change the prizes, codes and odds there (a higher weight wins more often). Each visitor spins once after entering their email, and you get an email with their details, prize and code. Winners click "Claim My Prize" and the prize is noted on their Contact form request. To try it any time, add ?spin=preview to any page address (preview spins are not sent to you).
+
 OTHER NOTES
 
 Cookie notice: Google Analytics only stores cookies after a visitor clicks Accept. Visitors can change their choice from "Cookie Settings" in the footer.

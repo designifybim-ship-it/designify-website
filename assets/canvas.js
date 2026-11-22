@@ -345,4 +345,107 @@ if(!promoLive)$$('[data-promo]').forEach(el=>el.remove());
   };
   new IntersectionObserver(es=>es.forEach(e=>{visible=e.isIntersecting;if(e.isIntersecting){sec.classList.add('in');start()}}),{rootMargin:'200px 0px'}).observe(sec);
 })();
+
+// ---------- Spin the wheel giveaway (settings: DESIGNIFY_SPIN in site.js) ----------
+(()=>{
+  const C=typeof DESIGNIFY_SPIN!=='undefined'?DESIGNIFY_SPIN:null;if(!C||!C.enabled||!C.prizes||!C.prizes.length)return;
+  let preview=false;try{if(new URLSearchParams(location.search).get('spin')==='preview')sessionStorage.setItem('dfy-spin-preview','1');preview=sessionStorage.getItem('dfy-spin-preview')==='1'}catch(e){}
+  const now=new Date(),live=now>=new Date(C.startDate+'T00:00:00')&&now<=new Date(C.endDate+'T23:59:59');
+  const claimDate=new Date(C.claimBy+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const KEY='dfy-spin-'+C.startDate;
+  const saved=()=>{if(preview)return null;try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}};
+
+  // Contact form: carry a won prize into the request (?offer=SPIN10)
+  const form=document.getElementById('designifyProjectForm');
+  const offer=new URLSearchParams(location.search).get('offer');
+  const won=offer&&C.prizes.find(p=>p.code===offer);
+  if(form&&won&&(preview||now<=new Date(C.claimBy+'T23:59:59'))){
+    const label=`${C.title}: ${won.label}, ${won.sub} (code ${won.code}, claim by ${claimDate}). ${won.terms?won.terms+' ':''}${C.terms}`;
+    const hid=document.createElement('input');hid.type='hidden';hid.name='special_offer';hid.value=label;form.prepend(hid);
+    const note=document.createElement('div');note.className='offer-applied';
+    note.innerHTML=`<i aria-hidden="true" class="fa-solid fa-gift"></i><div><strong>${C.title} prize noted: ${won.label}, ${won.sub}</strong><span>Code ${won.code}. Claim by ${claimDate}.</span></div>`;
+    form.prepend(note);form.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+  if(!live&&!preview)return;
+
+  // floating button
+  const tab=document.createElement('button');tab.type='button';tab.className='spin-tab';
+  tab.innerHTML='<span class="spin-tab-ic" aria-hidden="true"><i class="fa-solid fa-gift"></i></span><span class="spin-tab-t">Spin to win</span>';
+  tab.setAttribute('aria-haspopup','dialog');document.body.appendChild(tab);
+
+  // the wheel (drawn as SVG)
+  const n=C.prizes.length,R=150,cols=['#9D2CFF','#D21CF2','#6B5CFF','#B51FF5'];
+  const pt=(a,r)=>[(160+r*Math.sin(a)).toFixed(2),(160-r*Math.cos(a)).toFixed(2)];
+  let slices='';C.prizes.forEach((p,i)=>{const a0=i*2*Math.PI/n,a1=(i+1)*2*Math.PI/n,[x0,y0]=pt(a0,R),[x1,y1]=pt(a1,R),mid=(i+.5)*360/n;
+    slices+=`<path d="M160 160 L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} Z" fill="${p.grand?'url(#swGold)':cols[i%cols.length]}"/>`+
+      `<g transform="rotate(${mid-90} 160 160)"><text x="296" y="165" text-anchor="end" class="sw-l${p.grand?' sw-gold':''}">${p.wheel||p.label}</text></g>`});
+  let dots='';for(let i=0;i<n*2;i++){const [x,y]=pt(i*Math.PI/n,R+9);dots+=`<circle cx="${x}" cy="${y}" r="3.2" class="sw-dot"/>`}
+  const wheel=`<svg viewBox="0 0 320 320" class="sw-svg" aria-hidden="true"><defs><linearGradient id="swGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE48A"/><stop offset=".5" stop-color="#FFC83D"/><stop offset="1" stop-color="#F59E0B"/></linearGradient></defs><circle cx="160" cy="160" r="${R+18}" class="sw-rim"/><g class="sw-rot">${slices}</g>${dots}<circle cx="160" cy="160" r="34" class="sw-hub"/><text x="160" y="166" text-anchor="middle" class="sw-hub-t">SPIN</text></svg>`;
+
+  // every prize and its real chance, shown before anyone spins (same prizes merged)
+  const tot=C.prizes.reduce((a,p)=>a+p.weight,0),seen={};
+  C.prizes.forEach(p=>{const k=p.code;seen[k]=seen[k]||{p,w:0};seen[k].w+=p.weight});
+  const pct=w=>{const v=w/tot*100;return v<1?v.toFixed(1):Math.round(v)};
+  const odds=Object.values(seen).sort((a,b)=>b.w-a.w).map(({p,w})=>`<li class="${p.grand?'is-grand':''}"><span>${p.grand?'★ ':''}<b>${p.label}</b> ${p.sub}</span><em>${pct(w)}%</em></li>`).join('');
+  const grand=C.prizes.find(p=>p.grand);
+  const ov=document.createElement('div');ov.className='spin-ov';ov.hidden=true;
+  ov.innerHTML=`<div class="spin-card" role="dialog" aria-modal="true" aria-labelledby="spinTitle">
+    <button type="button" class="spin-x" aria-label="Close"><i aria-hidden="true" class="fa-solid fa-xmark"></i></button>
+    <div class="spin-wheel"><span class="sw-ptr" aria-hidden="true"></span>${wheel}<div class="spin-confetti" aria-hidden="true"></div></div>
+    <div class="spin-side">
+      <span class="spin-tag"><i aria-hidden="true" class="fa-solid fa-gift"></i> ${C.title}${preview&&!live?' · preview':''}</span>
+      <h2 id="spinTitle">Spin to win a <span class="g">design treat.</span></h2>
+      <form class="spin-form" novalidate>
+        <p>Every spin wins something. Here is exactly what you can win and how likely each prize is:</p>
+        <ul class="spin-odds">${odds}</ul>
+        ${grand&&grand.terms?`<div class="spin-gt"><b>★ About the grand prize:</b> ${grand.terms.replace(/^Grand prize:\s*/,'')}</div>`:''}
+        <label class="spin-f"><span>Email</span><input type="email" name="email" autocomplete="email" required placeholder="you@business.com"/></label>
+        <label class="spin-f"><span>WhatsApp <em>(optional)</em></span><input type="tel" name="whatsapp" autocomplete="tel" placeholder="+1 (246) …"/></label>
+        <label class="spin-ok"><input type="checkbox" required/> <span>Send me my prize and occasional Designify updates. I can unsubscribe any time.</span></label>
+        <button class="btn btn-primary spin-go" type="submit">Spin the Wheel <i aria-hidden="true" class="fa-solid fa-arrow-rotate-right"></i></button>
+        <small class="spin-terms">${C.terms}</small>
+      </form>
+      <div class="spin-res" hidden aria-live="polite"></div>
+    </div></div>`;
+  document.body.appendChild(ov);
+  const rot=ov.querySelector('.sw-rot'),res=ov.querySelector('.spin-res'),f=ov.querySelector('.spin-form'),card=ov.querySelector('.spin-card');
+  let lastFocus=null;
+  const open=()=>{lastFocus=document.activeElement;ov.hidden=false;requestAnimationFrame(()=>ov.classList.add('on'));const s=saved();if(s)showResult(C.prizes[s.i],false);else setTimeout(()=>f.email.focus(),300)};
+  const close=()=>{ov.classList.remove('on');setTimeout(()=>{ov.hidden=true;lastFocus&&lastFocus.focus()},300)};
+  tab.addEventListener('click',open);ov.querySelector('.spin-x').addEventListener('click',close);
+  ov.addEventListener('click',e=>{if(e.target===ov)close()});
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)close()});
+  // after a while on the page the button gives a little wiggle to get noticed
+  if(!saved()&&!reduce)setTimeout(()=>tab.classList.add('wiggle'),6000);
+
+  const showResult=(p,fresh)=>{
+    f.hidden=true;res.hidden=false;
+    const isList=p.code==='SPINLIST';
+    res.innerHTML=`<span class="spin-won">${p.grand?'★ Grand prize! ':''}${fresh?'You won!':'Your prize'}</span><h3>${p.label}</h3><p>${p.sub.charAt(0).toUpperCase()+p.sub.slice(1)}.</p>
+      <div class="spin-code"><span>Your code</span><b>${p.code}</b></div>${p.terms?`<small class="spin-gt">${p.terms}</small>`:''}<small>Claim by ${claimDate}. ${C.terms}</small>
+      <div class="hero-actions">${isList?'<a class="btn btn-primary" href="/assets/designify-brand-checklist.pdf" download><i aria-hidden="true" class="fa-solid fa-download"></i> Get the Checklist</a><a class="btn btn-line" href="/contact">Start a Project</a>':`<a class="btn btn-primary" href="/contact?offer=${p.code}">Claim My Prize <i aria-hidden="true" class="fa-solid fa-arrow-right"></i></a>`}</div>
+      ${preview?'<small class="spin-prev">Preview mode: entries are not sent and you can spin again after reloading.</small>':''}`;
+  };
+  const confetti=()=>{if(reduce)return;const box=ov.querySelector('.spin-confetti');box.innerHTML='';
+    for(let i=0;i<70;i++){const c=document.createElement('i');const a=Math.random()*Math.PI*2,d=120+Math.random()*190;
+      c.style.cssText=`--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-60}px;--r:${Math.random()*720-360}deg;background:${['#9D2CFF','#D21CF2','#4D8BFF','#FFC83D','#fff'][i%5]};animation-delay:${Math.random()*.15}s`;box.appendChild(c)}
+    setTimeout(()=>box.innerHTML='',2200)};
+
+  let spinning=false,turned=0;
+  f.addEventListener('submit',e=>{e.preventDefault();if(spinning)return;if(!f.reportValidity())return;spinning=true;
+    const total=C.prizes.reduce((a,p)=>a+p.weight,0);let r=Math.random()*total,i=0;for(;i<n;i++){r-=C.prizes[i].weight;if(r<0)break}i=Math.min(i,n-1);
+    const p=C.prizes[i];
+    if(!preview){
+      try{localStorage.setItem(KEY,JSON.stringify({i,code:p.code,t:Date.now()}))}catch(e){}
+      const fd=new FormData();fd.append('_subject',`${C.title}: ${p.label} won`);fd.append('_captcha','false');fd.append('_template','table');
+      fd.append('email',f.email.value);fd.append('whatsapp',f.whatsapp.value||'Not given');fd.append('prize',`${p.label}, ${p.sub}`);if(p.terms)fd.append('prize_terms',p.terms);fd.append('code',p.code);fd.append('claim_by',claimDate);
+      fetch('https://formsubmit.co/ajax/designifybim@gmail.com',{method:'POST',headers:{'Accept':'application/json'},body:fd}).catch(()=>{});
+    }
+    ov.querySelector('.spin-go').disabled=true;card.classList.add('spinning');card.scrollTo({top:0,behavior:reduce?'auto':'smooth'});document.activeElement&&document.activeElement.blur();
+    const slice=360/n,target=360-(i+.5)*slice+(Math.random()-.5)*slice*.6;
+    turned=turned-(turned%360)+360*(reduce?1:6)+target;
+    rot.style.transition=`transform ${reduce?1:5}s cubic-bezier(.13,.68,.1,1)`;rot.style.transform=`rotate(${turned}deg)`;
+    setTimeout(()=>{card.classList.remove('spinning');card.classList.add('won');confetti();showResult(p,true);spinning=false},reduce?1100:5200);
+  });
+})();
 })();
